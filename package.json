@@ -1,0 +1,23 @@
+{
+  "author": {
+    "name": "lijiabin"
+  },
+  "description": "codejs for highlight code",
+  "scripts": {
+    "start": "node gruntfile"
+  },
+  "main": "src/code.js",
+  "maintainers": [
+    {
+      "email": "13631624455@qq.com",
+      "name": "lijiabin"
+    }
+  ],
+  "name": "codejs",
+  "version": "1.0.0",
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-contrib-cssmin": "^2.2.1",
+    "grunt-contrib-uglify": "~0.2.0"
+  }
+}
