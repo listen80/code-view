@@ -443,7 +443,7 @@
                         li.appendChild(span);
                     }
                 }
-                ol.style.paddingLeft = String(count).length / 2 + 1 + 'em';
+                ol.style.paddingLeft = String(count).length / 2 + 1.3 + 'em';
                 ol.appendChild(li);
                 script.replaceChild(ol, firstChild);
                 script.style.display = 'block';
