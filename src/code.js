@@ -68,32 +68,35 @@
         }
 
         // todo        
-        function isRegExp(i) {
+        function isRegExp() {
             var is = 0;
             if (token === "/") {
                 j = i;
-                while (token = code[++j]) {
+                while (token = source[++j]) {
                     if (isNewLine()) {
                         break;
                     } else if (token === '\\') {
                         j++;
                     } else if (token === "/") {
-                        while (token = code[--i]) {
+                        j = i;
+                        while (true) {
+                            token = source[--j];
                             if (isNewLine()) {
                                 is = 1;
                                 break;
-                            } else if (isLogistic()) {
+                            } else if (isPunctuation()) {
                                 is = 1;
                                 break;
                             } else if (isNumber()) {
+                                break;
+                            } else if (!token) {
+                                is = 1;
                                 break;
                             }
                         }
                         break;
                     }
                 }
-                
-                
             }
             return is;
         }
@@ -183,7 +186,7 @@
                 }
             } else if (isLogistic()) {
 
-                match = isRegExp(i);
+                match = isRegExp();
                 if (match === 1) {
                     style = yellow;
                     cache = "/";
@@ -198,18 +201,18 @@
                             style = yellow;
                             cache = "/";
                             push();
-                            flag = 0;
+                            match = 0;
                             while (token = source[i + 1]) {
                                 if ('gi'.indexOf(token) !== -1) {
                                     style = red;
                                     cache += token;
-                                    flag = 1;
+                                    match = 1;
                                     i++;
                                 } else {
                                     break;
                                 }
                             }
-                            if (flag) {
+                            if (match) {
                                 push();
                             }
                             break;
