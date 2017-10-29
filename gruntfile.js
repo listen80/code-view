@@ -1,42 +1,58 @@
 var grunt = require('grunt')
-var banner = 
+var banner =
 `/* 
-  * CodeJS @' + ${new Date().toLocaleString()} + '
+  * CodeJS @' + ${new Date().toString()} + '
   */
 `
+
 module.exports = function(grunt) {
-	grunt.initConfig({
-		pkg: grunt.file.readJSON('package.json'),
-		cssmin: {
-			build: {
-				expand: true,
-				cwd: '',
-				src: ['code.css'],
-				dest: 'dist'
-			}
-		},
-		uglify: {
-			options: {
-				banner: `${banner}`
-			},
-			build: {
-				expand: true,
-				cwd: 'src',
-				src: '**/*.js',
-				dest: 'dist'
-			}
-		},
-		jshint: {
-			check: {
-				src: 'src/**/*.js'
-			}
-		}
-	});
+    grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
+        cssmin: {
+            options: {
+                rebase: false,
+                report: 'min',
+                sourceMap: false
+            },
+            build: {
+                expand: true,
+                cwd: '',
+                src: ['code.css'],
+                dest: 'dist'
+            }
+        },
+        uglify: {
+            options: {
+                banner: `${banner}`,
+                footer: '',
+                compress: {
+                    warnings: false
+                },
+                mangle: {},
+                beautify: false,
+                report: false
+            },
+            build: {
+                expand: true,
+                cwd: 'src',
+                src: '**/*.js',
+                dest: 'dist'
+            }
+        },
+        jshint: {
+            check: {
+                src: 'src/**/*.js'
+            }
+        }
+    });
 
-	grunt.loadNpmTasks('grunt-contrib-cssmin');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
-	grunt.registerTask('default', ['uglify', 'cssmin']);
+    grunt.registerTask('default', ['uglify', 'cssmin']);
 };
 
-grunt.tasks(this);
+grunt.tasks('', {}, () => {
+    var info = grunt.file.readJSON('package.json');
+    console.log('\n' + [info.name, info.version, 'is built @', new Date().toLocaleString()].join(' '))
+});

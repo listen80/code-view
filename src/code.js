@@ -1,147 +1,688 @@
-! function(context, document) {
-    var space = 'space';
-    var purple = 'purple';
-    var gold = 'gold';
-    var red = 'red';
-    var white = 'white';
-    var dark = 'dark';
-    var line = 'line';
-    var green = 'green';
-    var yellow = 'yellow';
-    var ryan = 'ryan';
-    var italic = ' i';
+! function(document) {
+    var space = 'space',
+        line = 'line',
+        dark = 'dark',
+        italic = ' i',
+        white = 'white',
+        purple = 'purple',
+        gold = 'gold',
+        red = 'red',
+        green = 'green',
+        yellow = 'yellow',
+        ryan = 'ryan';
 
-    function codeForString(source, extension) {
+    var token, style, cache, match, i = 0,
+        analysis = [];
 
-        // for a single token
-        function isNewLine() {
-            return token === '\n' || token === '\r';
+    var styles = getComputedStyle(document.createElement('div'))
+
+    var tags = 'a,abbr,address,area,article,aside,audio,b,base,bdi,bdo,big,blockquote,body,br,button,canvas,caption,center,cite,code,datalist,dd,del,details,dfn,dialog,dir,div,dl,dt,em,embed,fieldset,figcaption,figure,font,footer,form,frame,frameset,h1,h2,h3,h4,h5,h6,head,header,hgroup,hr,html,i,iframe,img,input,ins,kbd,keygen,label,legend,li,link,main,map,mark,nav,object,ol,optgroup,option,p,pre,progress,q,s,samp,script,section,select,small,span,strong,sub,summary,sup,table,tbody,td,textarea,tfoot,th,thead,tr,u,ul,video'.split(',');
+
+    function push() {
+        analysis.push([cache, style])
+    }
+
+    function isSpace() {
+        return token && /[\v\t ]/.test(token)
+    }
+
+    function isNewLine() {
+        return token === '\n' || token === '\r';
+    }
+
+    function isHex() {
+        return token && /[0-9A-Fa-f]/.test(token);
+    }
+
+    function isNumber() {
+        return token && /[0-9]/.test(token)
+    }
+
+    function isPunctuation() {
+        return "~`!@#$%^&*()-_+=[]{}\\;:'\"|,.<>/?".indexOf(token) !== -1;
+    }
+
+    function isLetter() {
+        return token && /[a-zA-Z_]/.test(token);
+    }
+
+    function isHtmlLetter() {
+        return isLetter() || token === '-';
+    }
+
+    function isLogistic() {
+        return "$!+-=*%&|^<>".indexOf(token) !== -1;
+    }
+
+    var keywords = "if,for,else,continue,switch,return,while,break,do,typeof,try,catch,abstract,assert,extends,finally,final,implements,import,instanceof,interface,native,package,strictfp,super,synchronized,throws,transient".split(',');
+
+    function isKeyword() {
+        return keywords.indexOf(cache) !== -1;
+    }
+
+    function isConstant() {
+        return ['null', 'true', 'false', 'undefined'].indexOf(cache) !== -1;
+    }
+
+    function isVariable() {
+        return cache === 'var' || cache === 'let' || cache === 'const';
+    }
+
+    function isParameter() {
+        return cache === 'self' || cache === 'this' || cache === 'argument';
+    }
+
+    function isNormal() {
+        return ['module', 'window', 'document', 'history', 'location', 'screen', 'console', 'Object', 'Array', 'Number', 'Boolean', 'String', 'RegExp', 'Math'].indexOf(cache) !== -1;
+    }
+
+    function getHex() {
+        style = purple;
+        cache = token;
+        while (true) {
+            token = source[++i];
+            if (isHex()) {
+                cache += token;
+            } else {
+                break;
+            }
         }
+    }
 
-        function isSpace() {
-            return token === ' ' || token === '\t';
-        }
-
-        function isLetter() {
-            return token && /[a-zA-Z_]/.test(token);
-        }
-
-        function isNumber() {
-            return token && /[0-9]/.test(token);
-        }
-
-        function isHex() {
-            return token && /[0-9A-Fa-f]/.test(token);
-        }
-
-        function isPunctuation() {
-            return "~`!@#$%^&*()-_+=[]{}\\;:'\"|,.<>/?".indexOf(token) !== -1;
-        }
-
-        function isLogistic() {
-            return "$!+-=*/%&|^<>".indexOf(token) !== -1;
-        }
-
-        // for cache
-        function isKeyword() {
-            return ['for', 'if', 'else', 'continue', 'switch', 'return', 'while', 'break', 'do', 'typeof', 'abstract', 'assert', 'extends', 'finally', 'final', 'implements', 'import', 'instanceof', 'interface', 'native', 'package', 'strictfp', 'super', 'synchronized', 'throws', 'transient', 'try', 'catch'].indexOf(cache) !== -1;
-        }
-
-        function isConstant() {
-            return ['null', 'true', 'false', 'undefined'].indexOf(cache) !== -1;
-        }
-
-        function isFunction() {
-            return cache === 'function';
-        }
-
-        function isVariable() {
-            return cache === 'var' || cache === 'let' || cache === 'const';
-        }
-
-        function isParameter() {
-            return cache === 'self' || cache === 'this' || cache === 'argument';
-        }
-
-        function isPublicFunc() {
-            return ['module', 'window', 'document', 'history', 'location', 'screen', 'console', 'Object', 'Array', 'Number', 'Boolean', 'String', 'RegExp', 'Math'].indexOf(cache) !== -1;
-        }
-
-        // todo        
-        function isRegExp() {
-            var is = 0;
-            if (token === "/") {
-                j = i;
-                while (token = source[++j]) {
-                    if (isNewLine()) {
-                        break;
-                    } else if (token === '\\') {
-                        j++;
-                    } else if (token === "/") {
-                        j = i;
-                        while (true) {
-                            token = source[--j];
-                            if (isNewLine()) {
-                                is = 1;
-                                break;
-                            } else if (isPunctuation()) {
-                                is = 1;
-                                break;
-                            } else if (isNumber()) {
-                                break;
-                            } else if (!token) {
-                                is = 1;
-                                break;
-                            }
-                        }
+    function getNumber() {
+        cache = token;
+        while (true) {
+            token = source[++i];
+            if (isNumber()) {
+                cache += token;
+            } else if (token === '.') {
+                cache += token;
+                while (true) {
+                    token = source[++i];
+                    if (isNumber()) {
+                        cache += token;
+                    } else {
                         break;
                     }
                 }
+                break;
+            } else {
+                break;
             }
-            return is;
         }
+    }
 
-        // push cache
-        function push() {
-            analysis.push([cache, style]);
-            cache = '', style = '';
+    function getWord() {
+        cache = token;
+        while (true) {
+            token = source[++i];
+            if (isLetter() || isNumber()) {
+                cache += token;
+            } else {
+                break;
+            }
         }
+    }
 
-        var analysis = [];
+    function getHtmlWord() {
+        cache = token;
+        while (true) {
+            token = source[++i];
+            if (isHtmlLetter() || isNumber()) {
+                cache += token;
+            } else {
+                break;
+            }
+        }
+    }
 
-        var token;
-        var i = 0;
+    function isTargetName() {
+        return tags.indexOf(cache) !== -1;
+    }
 
-        var cache = '';
-        var style = '';
+    function isStyleKey() {
+        return styles.hasOwnProperty(cache) || styles.hasOwnProperty(cache.replace(/^-(webkit|moz|ms|o)-/, ''));
+    }
 
-        var match;
+    var cssValue = 'rgba,rgb,auto,left,right,center,pointer,solid,hidden,opacity,visibility,fixed,underline,translateX,translateY,translateZ,transform,relative,table,both,block,url,bold,transparent,absolute'.split(',');
+    function isCssValue() {
+        return cssValue.indexOf(cache.replace(/^-(webkit|moz|ms|o)-/, '')) !== -1;
+    }
 
-        source = Object(source);
+    function handle(style) {
+        analysis.push([token, style])
+        i++;
+    }
 
-        function handlePunctuation() {
-            style = white;
-            cache = token;
-            if (token === '/' && source[i + 1] === '*') {
-                cache = '/*', i++;
-                style = dark;
+    function handleSpace() {
+        style = space;
+        cache = token;
+        while (true) {
+            token = source[++i];
+            if (isSpace()) {
+                cache += token;
+            } else {
+                push();
+                break;
+            }
+        }
+    }
+
+    function hanldeNumber() {
+        style = purple;
+        cache = token;
+        while (true) {
+            token = source[++i];
+            if (isNumber()) {
+                cache += token;
+            } else {
+                push();
+                break;
+            }
+        }
+    }
+
+    function AnalysisForCSSCode() {
+
+        while (true) {
+            token = source[i];
+            if (!token) {
+                break;
+            } else if (token === '/' && source[i + 1] === '*') {
+                cache = '/*';
+                i += 2;
+                
                 while (true) {
-                    token = source[++i];
+                    token = source[i];
                     if (!token) {
-                        push();
+                        cache && push();
                         break;
                     } else if (token === '*' && source[i + 1] === '/') {
-                        cache += '*/', i++;
+                        cache += '*/';
                         push();
+                        i += 2;
                         break;
                     } else if (isNewLine()) {
-                        push();
-                        cache = token;
-                        style = line;
-                        push();
                         style = dark;
+                        cache && push();
+                        handle(line);
+                        cache = '';
                     } else {
                         cache += token;
+                        i++;
+                    }
+                }
+            } else if (token === '.' || token === '#') {
+                match = token;
+                i++;
+                token = source[i];
+                if (isHtmlLetter()) {
+                    getHtmlWord();
+                    style = green;
+                    cache = match + cache;
+                    push();
+                } else {
+                    style = white;
+                    cache = match;
+                    push();
+                }
+            } else if (token === '[') {
+                handle(white);
+                while (true) {
+                    token = source[i]
+                    if (!token || isNewLine()) {
+                        break;
+                    } else if (token === ']') {
+                        handle(white);
+                        break;
+                    } else if (isHtmlLetter()) {
+                        getHtmlWord();
+                        style = green;
+                        push();
+                    } else if (isSpace()) {
+                        handleSpace();
+                    } else if (token === '=') {
+                        handle(red);
+                        while (true) {
+                            token = source[i];
+                            if (!token || isNewLine() || token === ']') {
+                                break;
+                            } else if (isSpace()) {
+                                handleSpace();
+                            } else if (token === '"' || token === "'") {
+                                match = cache = token;
+                                style = yellow;
+                                i++;
+                                while (true) {
+                                    token = source[i]
+                                    if (!token || isNewLine()) {
+                                        cache && push();
+                                        break;
+                                    } else if (token === match) {
+                                        cache += token;
+                                        push();
+                                        i++;
+                                        break;
+                                    } else {
+                                        cache += token;
+                                        i++;
+                                    }
+                                }
+                            } else if (isHtmlLetter()) {
+                                getHtmlWord();
+                                style = yellow;
+                                push();
+                            } else {
+                                handle(white);
+                            }
+                        }
+                    } else {
+                        cache = token;
+                        style = white;
+                        push();
+                        i++;
+                    }
+                }
+            } else if (isNewLine()) {
+                handle(line);
+            } else if (token === ':') {
+                handle(white);
+                while (true) {
+                    token = source[i];
+                    if (!token) {
+                        break;
+                    } else if (isSpace()) {
+                        handleSpace();
+                    } else if (isNewLine()) {
+                        handle(line);
+                        break;
+                    } else if (isHtmlLetter()) {
+                        getHtmlWord();
+                        if (isCssValue()) {
+                            style = ryan;
+                            push();
+                        } else {
+                            style = white;
+                            push();
+                        }
+                    } else if (isNumber() || token === '.') {
+                        getNumber();
+                        style = purple;
+                        push();
+                        // hanldeNumber();
+                        // px em %
+                        if (token === '%') {
+                            handle(red);
+                        } else if (token === 's') {
+                            handle(red);
+                        } else if (token === 'p' && source[i + 1] === 'x') {
+                            cache = 'px';
+                            style = red;
+                            push();
+                            i += 2;
+                        } else if (token === 'e' && source[i + 1] === 'm') {
+                            cache = 'em';
+                            style = red;
+                            push();
+                            i += 2;
+                        }
+                    } else if (token === ';') {
+                        handle(white);
+                        break;
+                    } else if (token === '#') {
+                        cache = match = token;
+                        i++;
+                        token = source[i];
+                        if (isHex()) {
+                            getHex();
+                            cache = match + cache;
+                            style = purple;
+                            push();
+                        } else {
+                            style = white;
+                            push();
+                            i++;
+                        }
+                    } else if (token === '#') {
+                        cache = match = token;
+                        i++;
+                        token = source[i];
+                        if (isHex()) {
+                            getHex();
+                            cache = match + cache;
+                            style = purple;
+                            push();
+                        } else {
+                            style = white;
+                            push();
+                            i++;
+                        }
+                    } else {
+                        // ( ) ,
+                        handle(white);
+                    }
+                }
+            } else if (isSpace()) {
+                handleSpace();
+            } else if (isHtmlLetter()) {
+                getHtmlWord();
+                if (isTargetName()) {
+                    style = red;
+                    push();
+                } else if (isStyleKey()) {
+                    style = ryan + italic;
+                    push();
+                } else {
+                    style = white;
+                    push();
+                }
+            } else if (token === '*') {
+                handle(red);
+            } else if (token === '@') {
+                cache = token;
+                style = red;
+                i++;
+                while (true) {
+                    token = source[i];
+                    if (!token || isNewLine()) {
+                        cache && push();
+                        break;
+                    } else if (token === '{') {
+                        push();
+                        break;
+                    } else {
+                        cache += token;
+                        i++;
+                    }
+                }
+            } else {
+                handle(white);
+            }
+        }
+
+        return analysis;
+    }
+
+    function AnalysisForMarkupCode() {
+
+        function handleWord() {
+            // tag attribute (name) = value
+            style = green;
+            cache = token;
+            while (token = source[++i]) {
+                if (isHtmlLetter() || isNumber()) {
+                    cache += token;
+                } else {
+                    push();
+                    break;
+                }
+            }
+
+            while (true) {
+                token = source[i];
+                if (isNewLine()) {
+                    handle(line);
+                } else if (isSpace()) {
+                    handleSpace()
+                } else {
+                    break;
+                }
+            }
+
+            if (token === '=') {
+                cache = token;
+                // tag attribute name (=) value
+                style = white;
+                i++;
+                push();
+
+                if (isSpace()) {
+                    handleSpace()
+                }
+                token = source[i];
+                if (token === '"' || token === "'") {
+                    // attribute value
+                    style = yellow;
+                    match = cache = token;
+                    while (token = source[++i]) {
+                        if (token === match) {
+                            cache += token;
+                            push();
+                            i++;
+                            break;
+                        } else if (isNewLine()) {
+                            push();
+                            style = line;
+                            cache = token;
+                            i++;
+                            push()
+                        } else {
+                            cache += token;
+                        }
+                    }
+                } else {
+                    if (!(!token || isNewLine() || token === '>')) {
+                        style = yellow;
+                        cache = token;
+                        while (true) {
+                            token = source[++i];
+                            if (!token || isNewLine() || token === '>' || token === ' ') {
+                                push();
+                                break;
+                            } else {
+                                cache += token;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function handleInnerTag() {
+            if (matchTag === 'script') {
+                matchTag = 'codejs';
+            }
+            var endIndex = source.indexOf('</' + matchTag + '>', i);
+            if (endIndex !== -1) {
+                var preSource = source;
+                source = source.substring(i, endIndex);
+                i = 0;
+                if (matchTag === 'style') {
+                    AnalysisForCSSCode();
+                } else {
+                    AnalysisForSourceCode();
+                }
+                source = preSource;
+                i = endIndex;
+                return 1;
+            }
+        }
+
+        var matchTag = '';
+        var isEndTag = 0;
+        while (true) {
+            token = source[i]
+            if (!token) {
+                break;
+            } else if (token === '<') {
+                if (source[i + 1] === '!') {
+                    if (source[i + 2] === '-' && source[i + 3] === '-') {
+                        cache = '<!--';
+                        style = dark;
+                        i += 4;
+                        while (true) {
+                            token = source[i]
+                            if (!token) {
+                                cache && push();
+                            } else if (token === '-' && source[i + 1] === '-' && source[i + 2] === '>') {
+                                cache += '-->';
+                                push();
+                                i += 3;
+                                break;
+                            } else if (isNewLine()) {
+                                cache && push();
+                                handle(line);
+                                cache = '';
+                            } else {
+                                cache += token;
+                                i++;
+                            }
+                        }
+                        continue;
+                    }
+                }
+
+                handle(white);
+                token = source[i]
+
+                if (token === '!' || token === '?') {
+                    handle(white);
+                } else if (token === '/') {
+                    handle(white);
+                    isEndTag = 1;
+                } else {
+                    isEndTag = 0;
+                }
+
+                token = source[i]
+                if (isHtmlLetter()) {
+                    // tag name
+                    style = red;
+                    cache = token;
+                    while (true) {
+                        token = source[++i]
+                        if (isHtmlLetter() || isNumber()) {
+                            cache += token;
+                        } else {
+                            if (cache === 'codejs' || cache === 'script') {
+                                matchTag = cache = 'script';
+                            } else if (cache === 'style') {
+                                matchTag = cache;
+                            }
+                            if (isEndTag) {
+                                matchTag = '';
+                            }
+                            push();
+                            break;
+                        }
+                    }
+
+                    while (token = source[i]) {
+                        if (token === '>') {
+                            cache = token;
+                            // tag end
+                            style = white;
+                            push();
+                            i++;
+                            break;
+                        } else if (isSpace()) {
+                            handleSpace();
+                        } else if (token === '"' || token === "'") {
+                            // attribute value
+                            style = yellow;
+                            cache = match = token;
+                            while (token = source[++i]) {
+                                if (token === match) {
+                                    cache += token;
+                                    i++;
+                                    push();
+                                    break;
+                                } else {
+                                    cache += token;
+                                }
+                            }
+                        } else if (isHtmlLetter() || isNumber()) {
+                            // tag inner word
+                            handleWord();
+                        } else if (isPunctuation()) {
+                            // for 
+                            handle(white);
+                        } else if (isNewLine()) {
+                            handle(line);
+                        } else {
+                            handle('fail');
+                        }
+                    }
+                }
+            } else if (isNewLine()) {
+                handle(line);
+            } else if (isSpace()) {
+                handleSpace();
+            } else {
+                // inner html
+                style = white;
+                cache = token;
+                if (matchTag === 'script' || matchTag === 'style') {
+                    if (handleInnerTag()) {
+                        continue;
+                    }
+                }
+                while (true) {
+                    token = source[++i]
+                    if (!token || isNewLine() || token === '<') {
+                        push();
+                        break;
+                    } else {
+                        cache += token;
+                    }
+                }
+            }
+        }
+        return analysis;
+    }
+
+    function AnalysisForSourceCode() {
+
+        function isRegExp() {
+            if (token === "/") {
+                var _i = i;
+                while (true) {
+                    token = source[--_i];
+                    if(isSpace()) {
+                        continue;
+                    }
+                    if (!token || isNewLine() || token === '=') {
+                        _i = i
+                        while (token = source[++_i]) {
+                            if (isNewLine()) {
+                                break;
+                            } else if (token === '\\') {
+                                _i++;
+                            } else if (token === "/") {
+                                
+                            }
+                        }
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+        }
+
+        function handlePunctuation() {
+            if (token === '/' && source[i + 1] === '*') {
+                cache = '/*';
+                i += 2;
+                
+                while (true) {
+                    token = source[i];
+                    if (!token) {
+                        cache && push();
+                        break;
+                    } else if (token === '*' && source[i + 1] === '/') {
+                        cache += '*/';
+                        push();
+                        i += 2;
+                        break;
+                    } else if (isNewLine()) {
+                        style = dark;
+                        cache && push();
+                        handle(line);
+                        cache = '';
+                    } else {
+                        cache += token;
+                        i++;
                     }
                 }
             } else if (token === '/' && source[i + 1] === '/') {
@@ -162,19 +703,21 @@
                         cache += token;
                     }
                 }
+                i++;
             } else if (token === "'" || token === '"') {
                 match = cache = token;
                 while (true) {
                     token = source[++i];
-                    if (!token) {
-                        push();
+                    if (!token || isNewLine()) {
+                        cache && push();
                         break;
                     } else if (token === '\\') {
                         style = yellow;
                         push();
-                        cache += token + source[++i];
+                        cache = token + source[++i];
                         style = purple;
                         push();
+                        cache = '';
                     } else if (token === match) {
                         cache += token;
                         style = yellow;
@@ -184,68 +727,58 @@
                         cache += token;
                     }
                 }
-            } else if (isLogistic()) {
-
-                match = isRegExp();
+                i++;
+            } else if (token === '/' || isLogistic()) {
+                match = token === '/' && isRegExp();
                 if (match === 1) {
-                    style = yellow;
-                    cache = "/";
+                    cache = '/';
+                    style = 'yellow hehe';
                     push();
+                    i++;
                     while (true) {
-                        token = source[++i];
-                        if (token === '\\') {
+                        token = source[i];
+                        if (!token || isNewLine()) {
+                            cache && push();
+                        } else if (token === '\\') {
                             style = purple;
                             cache = token + source[++i];
                             push();
+                            i++;
                         } else if (token === "/") {
                             style = yellow;
-                            cache = "/";
+                            cache = token;
                             push();
-                            match = 0;
-                            while (token = source[i + 1]) {
+                            i++;
+                            cache = '';
+                            while (token = source[i]) {
                                 if ('gi'.indexOf(token) !== -1) {
                                     style = red;
                                     cache += token;
-                                    match = 1;
                                     i++;
                                 } else {
                                     break;
                                 }
-                            }
-                            if (match) {
-                                push();
+                                cache && push();
                             }
                             break;
                         } else if (isLogistic()) {
-                            style = red;
-                            cache = token;
-                            push();
+                            handle(red);
                         } else if (isLetter()) {
                             style = yellow;
-                            cache = token;
-                            while (token = source[i + 1]) {
-                                if (isLetter()) {
-                                    cache += token;
-                                    i++;
-                                } else {
-                                    break;
-                                }
-                            }
+                            getWord();
                             push();
-                        } else {
-                            style = yellow;
-                            cache += token;
-                            push();
+                            cache = '';
+                        } else  {
+                            handle(yellow);
                         }
                     }
                 } else {
                     // logic
                     style = red;
                     cache = source[i];
-                    while (token = source[i + 1]) {
+                    while (token = source[++i]) {
                         if (isLogistic()) {
                             cache += token;
-                            i++;
                         } else {
                             push();
                             break;
@@ -253,27 +786,12 @@
                     }
                 }
             } else {
-                cache = token;
-                style = white;
-                push();
+                handle(white);
             }
+
         }
 
-        function hanldeSpace() {
-            style = space;
-            cache = token;
-            while (true) {
-                token = source[++i];
-                if (isSpace()) {
-                    cache += token;
-                } else {
-                    push();
-                    break;
-                }
-            }
-        }
-
-        function hanldeNumber() {
+        function hanldeNumberAndHex() {
             style = purple;
             cache = token;
             if (token === '0' && (source[i + 1] === 'x' || source[i + 1] === 'X')) {
@@ -289,87 +807,50 @@
                     }
                 }
             } else {
-                while (true) {
-                    token = source[++i];
-                    if (isNumber()) {
-                        cache += token;
-                    } else {
-                        push();
-                        break;
-                    }
-                }
+                hanldeNumber()
             }
         }
 
-        function hanldeNewLine() {
-            cache = token;
-            style = line;
-            push();
-            i++;
-        }
-
-        function getWord() {
-            cache = token;
-            while (true) {
-                token = source[++i];
-                if (isLetter() || isNumber()) {
-                    cache += token;
-                } else {
-                    break;
-                }
-            }
-        }
 
         while (true) {
             token = source[i];
             if (!token) {
                 break;
             } else if (isSpace()) {
-                hanldeSpace();
+                handleSpace();
             } else if (isNewLine()) {
-                hanldeNewLine();
+                handle(line);
             } else if (isNumber()) {
-                hanldeNumber();
+                hanldeNumberAndHex();
             } else if (isLetter()) {
                 getWord();
-                if (isFunction()) {
+                if (cache === 'function') {
                     style = ryan + italic;
                     push();
-
-                    if(isSpace()) {
-                        hanldeSpace();
+                    if (isSpace()) {
+                        handleSpace();
                     }
-
-                    if(isLetter()) {
+                    if (isLetter()) {
                         getWord();
                         style = green;
                         push();
-                        if(isSpace()) {
-                            hanldeSpace();
+                        if (isSpace()) {
+                            handleSpace();
                         }
                     }
-
                     if (token === '(') {
-                        style = white;
-                        cache = token;
-                        i++;
-                        push();
-                        while(true) {
+                        handle(white)
+                        while (true) {
                             token = source[i];
                             if (isSpace()) {
-                                hanldeSpace();
+                                handleSpace();
                             } else if (token === ',') {
-                                style = white;
-                                cache = token;
-                                push();
-                                i++;
+                                handle(white)
                             } else if (isLetter()) {
-                                // function parameter 
                                 getWord();
                                 style = gold + italic;
                                 push();
                             } else {
-                                // nothing
                                 break;
                             }
                         }
@@ -381,7 +862,7 @@
                         style = red;
                     } else if (isParameter()) {
                         style = gold + italic;
-                    } else if (isPublicFunc()) {
+                    } else if (isNormal()) {
                         style = ryan;
                     } else if (isConstant()) {
                         style = purple;
@@ -393,7 +874,7 @@
                             while (true) {
                                 token = source[i + 1];
                                 if (isSpace()) {
-                                    hanldeSpace();
+                                    handleSpace();
                                 } else if (token === '(') {
                                     style = ryan;
                                     break;
@@ -407,26 +888,28 @@
                 }
             } else if (isPunctuation()) {
                 handlePunctuation();
-                i++;
             } else {
-                cache = token;
-                style = 'fail';
-                push();
-                i++;
+                handle('fail');
             }
         }
         return analysis;
     }
 
-    function codeForElement(script, extension) {
+    function AnalysisFor(s) {
+        source = s;
+        i = 0;
+        analysis = [];
+        return /^\s*</.test(s) ? AnalysisForMarkupCode() : AnalysisForSourceCode()
+    }
+
+    function AnalysisForElement(script) {
         if (!script.code) {
             script.code = true;
             var firstChild = script.firstChild;
             if (firstChild) {
-                var codes = codeForString(
-                    firstChild.nodeValue.replace(/^\s+|\s+$/g, ""),
-                    extension || script.getAttribute('code')
-                );
+                console.time();
+                var codes = AnalysisFor(firstChild.nodeValue.replace(/^\s+|\s+$/g, ""));
+                console.timeEnd();
                 var ol = document.createElement('ol');
                 var li = document.createElement('li');
                 var count = 0;
@@ -447,32 +930,27 @@
                 ol.appendChild(li);
                 script.replaceChild(ol, firstChild);
                 script.style.display = 'block';
+                console.timeEnd();
             }
         }
     }
 
-    function code(element, extension) {
+    function code(element) {
         if (!element) {
             var scripts = document.body.getElementsByTagName('script');
             for (var k = 0, len = scripts.length; k < len; k++) {
                 var script = scripts[k];
-                script.hasAttribute('code') && codeForElement(script, extension);
+                script.hasAttribute('code') && AnalysisForElement(script);
             }
         } else {
             if (element instanceof Node) {
                 element.setAttribute('code', '');
-                codeForElement(element, extension);
+                AnalysisForElement(element);
             } else {
-                return codeForString(element.toString(), extension);
+                return AnalysisFor(element.toString());
             }
         }
     }
 
-    if (typeof module !== 'undefined') {
-        module.exports = code;
-    } else {
-        this.code = code;
-        code();
-    }
-
-}(this, this.document);
+    document && setTimeout(code);
+}(this.document)
