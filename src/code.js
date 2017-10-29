@@ -54,7 +54,7 @@
         return "$!+-=*%&|^<>".indexOf(token) !== -1;
     }
 
-    var keywords = "if,for,else,continue,switch,return,while,break,do,typeof,try,catch,abstract,assert,extends,finally,final,implements,import,instanceof,interface,native,package,strictfp,super,synchronized,throws,transient".split(',');
+    var keywords = "if,for,else,continue,switch,return,while,break,throw,new,do,typeof,try,catch,abstract,assert,extends,finally,final,implements,import,instanceof,interface,native,package,strictfp,super,synchronized,throws,transient".split(',');
 
     function isKeyword() {
         return keywords.indexOf(cache) !== -1;
