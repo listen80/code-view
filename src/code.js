@@ -614,27 +614,30 @@
     function AnalysisForSourceCode() {
 
         function isRegExp() {
-            if (token === "/") {
-                var _i = i;
+            var _i;
+            if(token === '/') {
+                _i = i;
                 while (true) {
                     token = source[--_i];
                     if (isSpace()) {
                         continue;
-                    }
-                    if (!token || isNewLine() || isPunctuation()) {
+                    } else if (token === '=' || token === ':' || token === '(' || token === '|' || token === '?' || isNewLine() || !token) {
                         _i = i
                         while (token = source[++_i]) {
-                            if (isNewLine()) {
+                            if (isNewLine() || !token) {
                                 break;
                             } else if (token === '\\') {
                                 _i++;
+                                continue
                             } else if (token === "/") {
-
+                                return 1;
+                            } else {
+                                continue;
                             }
                         }
-                        return 1;
+                        break;
                     } else {
-                        return 0;
+                        break;
                     }
                 }
             }
@@ -709,7 +712,7 @@
                 }
                 i++;
             } else if (token === '/' || isLogistic()) {
-                match = token === '/' && isRegExp();
+                match = isRegExp();
                 if (match === 1) {
                     cache = '/';
                     style = 'yellow hehe';
