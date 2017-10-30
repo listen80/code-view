@@ -11,12 +11,14 @@
         yellow = 'yellow',
         ryan = 'ryan';
 
-    var token, style, cache, match, i = 0,
-        analysis = [];
+    var token, style, cache, match, i, analysis;
 
     var styles = getComputedStyle(document.createElement('div'))
 
     var tags = 'a,abbr,address,area,article,aside,audio,b,base,bdi,bdo,big,blockquote,body,br,button,canvas,caption,center,cite,code,datalist,dd,del,details,dfn,dialog,dir,div,dl,dt,em,embed,fieldset,figcaption,figure,font,footer,form,frame,frameset,h1,h2,h3,h4,h5,h6,head,header,hgroup,hr,html,i,iframe,img,input,ins,kbd,keygen,label,legend,li,link,main,map,mark,nav,object,ol,optgroup,option,p,pre,progress,q,s,samp,script,section,select,small,span,strong,sub,summary,sup,table,tbody,td,textarea,tfoot,th,thead,tr,u,ul,video'.split(',');
+
+    var cssValue = 'rgba,rgb,auto,left,right,center,pointer,none,border-box,middle,normal,content-box,thin,dotted,solid,hidden,opacity,visibility,fixed,underline,translateX,translateY,translateZ,transform,relative,table,both,block,url,bold,transparent,absolute'.split(',');
+
 
     function push() {
         analysis.push([cache, style])
@@ -54,7 +56,7 @@
         return "$!+-=*%&|^<>".indexOf(token) !== -1;
     }
 
-    var keywords = "if,for,else,continue,switch,return,while,break,throw,new,do,typeof,try,catch,abstract,assert,extends,finally,final,implements,import,instanceof,interface,native,package,strictfp,super,synchronized,throws,transient".split(',');
+    var keywords = "if,for,else,continue,switch,return,while,inline-block,inline,top,bottom,break,throw,new,do,typeof,try,catch,abstract,assert,extends,finally,final,implements,import,instanceof,interface,native,package,strictfp,super,synchronized,throws,transient".split(',');
 
     function isKeyword() {
         return keywords.indexOf(cache) !== -1;
@@ -144,7 +146,6 @@
         return styles.hasOwnProperty(cache) || styles.hasOwnProperty(cache.replace(/^-(webkit|moz|ms|o)-/, ''));
     }
 
-    var cssValue = 'rgba,rgb,auto,left,right,center,pointer,solid,hidden,opacity,visibility,fixed,underline,translateX,translateY,translateZ,transform,relative,table,both,block,url,bold,transparent,absolute'.split(',');
     function isCssValue() {
         return cssValue.indexOf(cache.replace(/^-(webkit|moz|ms|o)-/, '')) !== -1;
     }
@@ -191,7 +192,7 @@
             } else if (token === '/' && source[i + 1] === '*') {
                 cache = '/*';
                 i += 2;
-                
+
                 while (true) {
                     token = source[i];
                     if (!token) {
@@ -479,11 +480,8 @@
         }
 
         function handleInnerTag() {
-            if (matchTag === 'script') {
-                matchTag = 'codejs';
-            }
             var endIndex = source.indexOf('</' + matchTag + '>', i);
-            if (endIndex !== -1) {
+            if (endIndex !== -1 && endIndex > i) {
                 var preSource = source;
                 source = source.substring(i, endIndex);
                 i = 0;
@@ -494,7 +492,6 @@
                 }
                 source = preSource;
                 i = endIndex;
-                return 1;
             }
         }
 
@@ -547,33 +544,21 @@
                 token = source[i]
                 if (isHtmlLetter()) {
                     // tag name
-                    style = red;
-                    cache = token;
-                    while (true) {
-                        token = source[++i]
-                        if (isHtmlLetter() || isNumber()) {
-                            cache += token;
-                        } else {
-                            if (cache === 'codejs' || cache === 'script') {
-                                matchTag = cache = 'script';
-                            } else if (cache === 'style') {
-                                matchTag = cache;
-                            }
-                            if (isEndTag) {
-                                matchTag = '';
-                            }
-                            push();
-                            break;
-                        }
+                    getHtmlWord();
+                    if (isEndTag) {
+                        matchTag = '';
+                    } else {
+                        matchTag = cache;
                     }
-
+                    style = red;
+                    push();                    
                     while (token = source[i]) {
                         if (token === '>') {
-                            cache = token;
                             // tag end
-                            style = white;
-                            push();
-                            i++;
+                            handle(white);
+                            if (matchTag === 'script' || matchTag === 'style') {
+                                handleInnerTag()
+                            }
                             break;
                         } else if (isSpace()) {
                             handleSpace();
@@ -612,11 +597,6 @@
                 // inner html
                 style = white;
                 cache = token;
-                if (matchTag === 'script' || matchTag === 'style') {
-                    if (handleInnerTag()) {
-                        continue;
-                    }
-                }
                 while (true) {
                     token = source[++i]
                     if (!token || isNewLine() || token === '<') {
@@ -638,10 +618,10 @@
                 var _i = i;
                 while (true) {
                     token = source[--_i];
-                    if(isSpace()) {
+                    if (isSpace()) {
                         continue;
                     }
-                    if (!token || isNewLine() || token === '=') {
+                    if (!token || isNewLine() || isPunctuation()) {
                         _i = i
                         while (token = source[++_i]) {
                             if (isNewLine()) {
@@ -649,7 +629,7 @@
                             } else if (token === '\\') {
                                 _i++;
                             } else if (token === "/") {
-                                
+
                             }
                         }
                         return 1;
@@ -664,7 +644,7 @@
             if (token === '/' && source[i + 1] === '*') {
                 cache = '/*';
                 i += 2;
-                
+
                 while (true) {
                     token = source[i];
                     if (!token) {
@@ -768,7 +748,7 @@
                             getWord();
                             push();
                             cache = '';
-                        } else  {
+                        } else {
                             handle(yellow);
                         }
                     }
@@ -896,9 +876,7 @@
     }
 
     function AnalysisFor(s) {
-        source = s;
-        i = 0;
-        analysis = [];
+        source = s;i = 0,analysis = [];
         return /^\s*</.test(s) ? AnalysisForMarkupCode() : AnalysisForSourceCode()
     }
 
@@ -931,26 +909,38 @@
                 script.replaceChild(ol, firstChild);
                 script.style.display = 'block';
                 console.timeEnd();
+                setTimeout(console.timeEnd)
             }
+        }
+    }
+
+    function AnalysisForTagName(tagname) {
+        var scripts = document.body.getElementsByTagName(tagname);
+        for (var k = 0, len = scripts.length; k < len; k++) {
+            var script = scripts[k];
+            script.hasAttribute('code') && AnalysisForElement(script);
         }
     }
 
     function code(element) {
         if (!element) {
-            var scripts = document.body.getElementsByTagName('script');
-            for (var k = 0, len = scripts.length; k < len; k++) {
-                var script = scripts[k];
-                script.hasAttribute('code') && AnalysisForElement(script);
-            }
+            AnalysisForTagName('xmp');
+            AnalysisForTagName('script');
         } else {
             if (element instanceof Node) {
-                element.setAttribute('code', '');
-                AnalysisForElement(element);
+                element.setAttribute('code', ''), AnalysisForElement(element);
             } else {
                 return AnalysisFor(element.toString());
             }
         }
     }
 
-    document && setTimeout(code);
+    if (typeof module !== 'undefined') {
+        module.exports = code;
+    } else {
+        this.code = code;
+    }
+
+    document && setTimeout(document.body && code);
+
 }(this.document)

@@ -1,4 +1,5 @@
 var grunt = require('grunt')
+// console.log(process.argv)
 var banner =
 `/* 
   * CodeJS @' + ${new Date().toString()} + '

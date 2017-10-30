@@ -1,4 +1,4 @@
-script[code] {
+[code] {
   font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
   white-space: pre;
   font-size: 14px;
@@ -8,15 +8,16 @@ script[code] {
   padding: 8px;
   border-radius: 8px;
   overflow-x: auto;
+  display: none;
 }
 
-script[code] ol {
+[code] ol {
   list-style-type: decimal;
   margin: 0;
   padding: 0 0 0 40px;
 }
 
-script[code] span::selection {
+[code] span::selection {
   background: #919293;
 }
 
