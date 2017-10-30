@@ -14,11 +14,12 @@
     var token, style, cache, match, i, analysis;
 
     var styles = getComputedStyle(document.createElement('div'))
+    
+    var keywords = "if,for,else,continue,switch,return,while,break,throw,new,do,typeof,try,catch,abstract,assert,extends,finally,final,implements,import,instanceof,interface,native,package,strictfp,super,synchronized,throws,transient".split(',');
 
     var tags = 'a,abbr,address,area,article,aside,audio,b,base,bdi,bdo,big,blockquote,body,br,button,canvas,caption,center,cite,code,datalist,dd,del,details,dfn,dialog,dir,div,dl,dt,em,embed,fieldset,figcaption,figure,font,footer,form,frame,frameset,h1,h2,h3,h4,h5,h6,head,header,hgroup,hr,html,i,iframe,img,input,ins,kbd,keygen,label,legend,li,link,main,map,mark,nav,object,ol,optgroup,option,p,pre,progress,q,s,samp,script,section,select,small,span,strong,sub,summary,sup,table,tbody,td,textarea,tfoot,th,thead,tr,u,ul,video'.split(',');
 
-    var cssValue = 'rgba,rgb,auto,left,right,center,pointer,none,border-box,middle,normal,content-box,thin,dotted,solid,hidden,opacity,visibility,fixed,underline,translateX,translateY,translateZ,transform,relative,table,both,block,url,bold,transparent,absolute'.split(',');
-
+    var cssValue = 'rgba,rgb,auto,left,right,center,pointer,none,border-box,middle,normal,content-box,thin,dotted,solid,hidden,opacity,visibility,fixed,underline,translateX,translateY,translateZ,transform,relative,table,both,block,url,bold,transparent,absolute,inline-block,inline,top,bottom'.split(',');
 
     function push() {
         analysis.push([cache, style])
@@ -55,8 +56,6 @@
     function isLogistic() {
         return "$!+-=*%&|^<>".indexOf(token) !== -1;
     }
-
-    var keywords = "if,for,else,continue,switch,return,while,inline-block,inline,top,bottom,break,throw,new,do,typeof,try,catch,abstract,assert,extends,finally,final,implements,import,instanceof,interface,native,package,strictfp,super,synchronized,throws,transient".split(',');
 
     function isKeyword() {
         return keywords.indexOf(cache) !== -1;
