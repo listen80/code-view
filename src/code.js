@@ -917,7 +917,7 @@
     }
 
     function AnalysisForTagName(tagname) {
-        var scripts = document.body.getElementsByTagName(tagname);
+        var scripts = document.getElementsByTagName(tagname);
         for (var k = 0, len = scripts.length; k < len; k++) {
             var script = scripts[k];
             script.hasAttribute('code') && AnalysisForElement(script);
@@ -943,6 +943,6 @@
         this.code = code;
     }
 
-    document && setTimeout(document.body && code);
+    document && setTimeout(code);
 
 }(this.document)
