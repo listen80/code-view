@@ -850,6 +850,7 @@
                         style = purple;
                     } else {
                         style = white;
+                        
                         if (token === '(') {
                             style = ryan;
                         } else if (isSpace()) {
@@ -887,9 +888,7 @@
             script.code = true;
             var firstChild = script.firstChild;
             if (firstChild) {
-                console.time();
                 var codes = AnalysisFor(firstChild.nodeValue.replace(/^\s+|\s+$/g, ""));
-                console.timeEnd();
                 var ol = document.createElement('ol');
                 var li = document.createElement('li');
                 var count = 0;
@@ -910,8 +909,6 @@
                 ol.appendChild(li);
                 script.replaceChild(ol, firstChild);
                 script.style.display = 'block';
-                console.timeEnd();
-                setTimeout(console.timeEnd)
             }
         }
     }
