@@ -74,7 +74,7 @@
     }
 
     function isNormal() {
-        return ['module', 'window', 'document', 'history', 'location', 'screen', 'console', 'Object', 'Array', 'Number', 'Boolean', 'String', 'RegExp', 'Math'].indexOf(cache) !== -1;
+        return ['prototype', 'module', 'window', 'document', 'history', 'location', 'screen', 'console', 'Object', 'Array', 'Number', 'Boolean', 'String', 'RegExp', 'Math'].indexOf(cache) !== -1;
     }
 
     function getHex() {
@@ -773,7 +773,7 @@
 
         }
 
-        function hanldeNumberAndHex() {
+        function handleNumberAndHex() {
             style = purple;
             cache = token;
             if (token === '0' && (source[i + 1] === 'x' || source[i + 1] === 'X')) {
@@ -793,6 +793,31 @@
             }
         }
 
+        function handleFunction() {
+            var len = analysis.length - 1;
+            token = analysis[len][0][0];
+            if(isSpace()) {
+                len--;
+                token = analysis[len][0][0];
+            }
+            if(token === ':' || token === '=') {
+                len--;
+                token = analysis[len][0][0];
+                if(isSpace()) {
+                    len--;
+                    token = analysis[len][0][0];
+                }
+                if(isLetter()) {
+                    analysis[len][1] = 'green';
+                }
+            }
+
+            token = source[i];
+            cache = 'function';
+            style = ryan + italic;
+            push();
+        }
+
 
         while (true) {
             token = source[i];
@@ -803,12 +828,11 @@
             } else if (isNewLine()) {
                 handle(line);
             } else if (isNumber()) {
-                hanldeNumberAndHex();
+                handleNumberAndHex();
             } else if (isLetter()) {
                 getWord();
                 if (cache === 'function') {
-                    style = ryan + italic;
-                    push();
+                    handleFunction();
                     if (isSpace()) {
                         handleSpace();
                     }
