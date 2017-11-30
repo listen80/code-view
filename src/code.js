@@ -142,7 +142,7 @@
     }
 
     function isStyleKey() {
-        return ~cssKeys.indexOf(cache);
+        return ~cssKeys.indexOf(cache.replace(/^-(webkit|moz|ms|o)-/, ''));
     }
 
     function isCssValue() {
@@ -301,6 +301,9 @@
                         if (isCssValue()) {
                             style = ryan;
                             push();
+                        } else if (cache === 'important') {
+                            style = red;
+                            push();
                         } else {
                             style = white;
                             push();
@@ -320,8 +323,13 @@
                             style = red;
                             push();
                             i += 2;
-                        } else if (token === 'e' && source[i + 1] === 'm') {
+                        } else if ((token === 'e') && source[i + 1] === 'm') {
                             cache = 'em';
+                            style = red;
+                            push();
+                            i += 2;
+                        } else if ((token === 'c') && source[i + 1] === 'm') {
+                            cache = 'cm';
                             style = red;
                             push();
                             i += 2;
@@ -357,6 +365,8 @@
                             push();
                             i++;
                         }
+                    } else if (token === '!') {
+                        handle(red);
                     } else {
                         // ( ) ,
                         handle(white);
