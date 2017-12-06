@@ -1,8 +1,8 @@
 ! function(document) {
     var space = 'space',
         line = 'line',
-        dark = 'dark',
         italic = ' i',
+        dark = 'dark',
         white = 'white',
         purple = 'purple',
         gold = 'gold',
@@ -198,6 +198,23 @@
         }
     }
 
+    function handleWei() {
+        token = source[i];
+        if(token === ':') {
+            handle(white);
+            token = source[i];
+            if(token === ':') {
+                handle(white);
+                token = source[i];
+            }
+            if (isHtmlLetter()){
+                getHtmlWord();
+                style = gold;
+                push();
+            }
+        }
+    }
+
     function AnalysisForCSSCode() {
 
         while (true) {
@@ -237,6 +254,7 @@
                     style = green;
                     cache = match + cache;
                     push();
+                    handleWei();
                 } else {
                     style = white;
                     cache = match;
@@ -250,6 +268,7 @@
                         break;
                     } else if (token === ']') {
                         handle(white);
+                        handleWei();
                         break;
                     } else if (isHtmlLetter()) {
                         getHtmlWord();
@@ -405,6 +424,7 @@
                 if (isTargetName()) {
                     style = red;
                     push();
+                    handleWei();
                 } else if (isCssKey()) {
                     style = ryan + italic;
                     push();
