@@ -15,7 +15,7 @@ if(result.error) {
 
 
 // css
-let css = fs.readFileSync('./code.css').toString();
+let css = fs.readFileSync('./src/code.css').toString();
 const min = new clean().minify(css);
 if(min.errors.length) {
     console.log(min.errors);
