@@ -1,8 +1,8 @@
 ! function(document) {
     var space = 'space',
         line = 'line',
-        italic = ' i',
         dark = 'dark',
+        italic = ' i',
         white = 'white',
         purple = 'purple',
         gold = 'gold',
@@ -198,23 +198,6 @@
         }
     }
 
-    function handleWei() {
-        token = source[i];
-        if(token === ':') {
-            handle(white);
-            token = source[i];
-            if(token === ':') {
-                handle(white);
-                token = source[i];
-            }
-            if (isHtmlLetter()){
-                getHtmlWord();
-                style = gold;
-                push();
-            }
-        }
-    }
-
     function AnalysisForCSSCode() {
 
         while (true) {
@@ -254,7 +237,6 @@
                     style = green;
                     cache = match + cache;
                     push();
-                    handleWei();
                 } else {
                     style = white;
                     cache = match;
@@ -268,7 +250,6 @@
                         break;
                     } else if (token === ']') {
                         handle(white);
-                        handleWei();
                         break;
                     } else if (isHtmlLetter()) {
                         getHtmlWord();
@@ -424,7 +405,6 @@
                 if (isTargetName()) {
                     style = red;
                     push();
-                    handleWei();
                 } else if (isCssKey()) {
                     style = ryan + italic;
                     push();
@@ -961,10 +941,16 @@
         return analysis;
     }
 
-    function AnalysisFor(s) {
+    function AnalysisFor(s, indent) {
         source = s;
+        if(indent) {
+            var reg = new RegExp('^\\s{' + indent + '}')
+            source = source.split(/\n|\r|(?:\r\n)/).map(function(v) {
+               return  v.replace(reg, '')
+            }).join('\n');
+        }
         i = 0, analysis = [];
-        return /^\s*</.test(s) ? AnalysisForMarkupCode() : AnalysisForSourceCode()
+        return /^\s*</.test(source) ? AnalysisForMarkupCode() : AnalysisForSourceCode()
     }
 
     function AnalysisForElement(script) {
@@ -972,7 +958,7 @@
             script.coded = true;
             var firstChild = script.firstChild;
             if (firstChild) {
-                var codes = AnalysisFor(firstChild.nodeValue.replace(/^\s+|\s+$/g, ""));
+                var codes = AnalysisFor(firstChild.nodeValue.replace(/^\s+|\s+$/g, ""), script.getAttribute('code'));
                 var ol = document.createElement('ol');
                 var li = document.createElement('li');
                 var count = 0;
@@ -1005,7 +991,7 @@
         }
     }
 
-    function code(element) {
+    function code(element, indent) {
         if (!element) {
             AnalysisForTagName('xmp');
             AnalysisForTagName('script');
@@ -1013,7 +999,7 @@
             if (element instanceof Node) {
                 element.setAttribute('code', ''), AnalysisForElement(element);
             } else {
-                return AnalysisFor(element.toString());
+                return AnalysisFor(element.toString(), indent);
             }
         }
     }
@@ -1024,6 +1010,6 @@
         this.code = code;
     }
 
-    document && setTimeout(code, 222);
+    document && setTimeout(code);
 
 }(this.document)

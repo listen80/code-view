@@ -16,39 +16,42 @@
   margin: 0;
   padding: 0 0 0 40px;
 }
+[code] li {
+  white-space: pre-wrap;
+}
 
 [code] span::selection {
   background: #919293;
 }
 
-.i {
+[code] .i {
   font-style: italic;
 }
 
-.red {
+[code] .red {
   color: #F92672;
 }
 
-.purple {
+[code] .purple {
   color: #AE81FF;
 }
 
-.yellow {
+[code] .yellow {
   color: #E6DB74;
 }
 
-.white {
+[code] .white {
   color: #F8F8F2;
 }
 
-.ryan {
+[code] .ryan {
   color: #66D9EF;
 }
 
-.gold {
+[code] .gold {
   color: #FD971F;
 }
 
-.green {
+[code] .green {
   color: #A6E22E;
 }
