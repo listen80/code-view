@@ -771,15 +771,15 @@
                             i++;
                             cache = '';
                             while (token = source[i]) {
-                                if ('gi'.indexOf(token) !== -1) {
+                                if (~'gi'.indexOf(token)) {
                                     style = red;
                                     cache += token;
                                     i++;
                                 } else {
                                     break;
                                 }
-                                cache && push();
                             }
+                            cache && push();
                             break;
                         } else if (isLogistic()) {
                             handle(red);
