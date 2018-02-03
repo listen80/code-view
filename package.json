@@ -16,8 +16,7 @@
   "name": "CodeJs",
   "version": "1.0.0",
   "devDependencies": {
-    "clean-css": "^4.1.9",
-    "uglify-js": "^3.1.6"
-  },
-  "dependencies": {}
+    "clean-css": "4.1.9",
+    "uglify-js": "3.3.3"
+  }
 }
