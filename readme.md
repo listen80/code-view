@@ -1,12 +1,13 @@
 # codejs
 
-## compile
+## 安装
 1. npm install
 2. npm start
 
 ## 用法
-引入codejs标签  
-xmp,script标签上加code属性
+### 引入codejs
+<script type="code.js"></script>
+### xmp,script标签上加code属性
 
 ```
 <xmp code>
@@ -20,11 +21,11 @@ xmp,script标签上加code属性
 </xmp>
 ```
 
-<pre>
-&lt;script code type="js">
- var a = 10;
- var b = function() {}
-&lt/script>
-</pre>
+```
+<script code type="js">
+  var a = 10;
+  var b = function() {}
+</script>
+```
 
-##详情见example
+## 详情见example
