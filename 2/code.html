@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>CodeView</title>
+    <link rel="stylesheet" href="code.css">
+    <style type="text/css">
+    select {
+        font-size: 1em;
+    }
+    </style>
+</head>
+
+<body>
+    <h1>CodeView 高亮 <select></select></h1>
+    <script type="text/code" code></script>
+    <script src="code.js"></script>
+</body>
+
+</html>
+<script>
+let libraries = {
+    jQuery: 'https://cdn.bootcss.com/jquery/1.11.1/jquery.js',
+    Vue: 'https://cdn.bootcss.com/vue/2.5.21/vue.common.js',
+    React: 'https://cdn.bootcss.com/react/16.7.0/cjs/react.development.js',
+}
+
+let select = document.querySelector('select')
+Object.keys(libraries).forEach((lib) => {
+    let option = document.createElement('option')
+    option.innerHTML = lib
+    option.value = lib
+    select.appendChild(option)
+})
+
+select.onchange = function(e) {
+    format(this.value)
+}
+
+function format(s) {
+    fetch(libraries[s])
+        .then(data => data.text()
+            .then(data => {
+                var script = document.createElement('script')
+                script.setAttribute('code', '')
+                script.setAttribute('type', 'text/code')
+                script.innerHTML = data.replace(/\t/g, '  ')
+                document.body.replaceChild(script, document.querySelector('[code]'))
+                code(script)
+            })
+        )
+}
+
+format('jQuery')
+</script>
