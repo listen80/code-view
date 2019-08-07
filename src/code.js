@@ -833,7 +833,7 @@
 
         function handleFunction() {
             var len = analysis.length - 1;
-            if(len > -1) {
+            if (len > -1) {
                 token = analysis[len][0][0];
                 if (isSpace()) {
                     len--;
@@ -943,10 +943,10 @@
 
     function AnalysisFor(s, indent) {
         source = s;
-        if(indent) {
+        if (indent) {
             var reg = new RegExp('^\\s{' + indent + '}')
             source = source.split(/\n|\r|(?:\r\n)/).map(function(v) {
-               return  v.replace(reg, '')
+                return v.replace(reg, '')
             }).join('\n');
         }
         i = 0, analysis = [];
