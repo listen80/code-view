@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>codejs</title>
+    <link rel="stylesheet" href="../src/code.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <title>codejs</title>
-  <link rel="stylesheet" href="../src/code.css">
-</head>
+  <body>
+    <xmp code type="text/html"></xmp>
+    <script
+      type="text/javascript"
+      src="https://cdn.bootcss.com/axios/0.19.0/axios.min.js"
+    ></script>
+    <script src="../src/code.js"></script>
+    <script type="text/javascript">
+      let config = {
+        jquery: "https://cdn.bootcss.com/jquery/2.0.0/jquery.js",
+        vue: "https://cdn.bootcss.com/vue/2.6.10/vue.common.dev.js",
+        react: "https://cdn.bootcss.com/react/16.9.0/cjs/react.development.js",
+        "twitter-bootstrap":
+          "https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.js"
+      };
 
-<body>
-  <xmp code type="text/html"></xmp>
-  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-  <script src="../src/code.js"></script>
-  <script type="text/javascript">
-  $.get('https://cdn.bootcss.com/highcharts/5.0.14/highcharts.js', function function_name(argument) {
-    // body...
-    debugger
-  }, function function_name(argument) {
-    // body...
-    debugger
-  }).done(function(data) {
-    debugger
-    $('xmp').css('display', 'block').append(code.createElement(code(data)));
-  }) 
-  if (window.XMLHttpRequest){ // code for IE7+, Firefox, Chrome, Opera, Safari
-    xmlhttp = new XMLHttpRequest();
-  }
-  else { // code for IE6, IE5
-    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  xmlhttp.open("GET", "https://cdn.bootcss.com/highcharts/5.0.14/highcharts.js", true);
-  xmlhttp.send();
-  </script>
-</body>
-
+      axios
+        .get(config[location.search] || "jquery")
+        .then(function(response) {
+          document
+            .querySelector("xmp")
+            .appendChild(code.createElement(code(response.data)));
+          document.querySelector("xmp").style.display = "block";
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    </script>
+  </body>
 </html>
