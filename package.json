@@ -1,20 +1,16 @@
 {
-  "author": {
-    "name": "lijiabin"
-  },
-  "description": "code-view for highlight code",
-  "scripts": {
-    "start": "node build"
-  },
-  "main": "src/code.js",
-  "maintainers": [
-    {
-      "email": "13392153053@163.com",
-      "name": "lijiabin"
-    }
-  ],
   "name": "code-view",
   "version": "1.0.0",
+  "description": "code-view for highlight code",
+  "main": "src/code.js",
+  "scripts": {
+    "build": "node build"
+  },
+  "author": "listen80",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/listen80/code-view.git"
+  },
   "devDependencies": {
     "clean-css": "4.1.11",
     "uglify-js": "3.3.3"
