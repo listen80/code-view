@@ -12,12 +12,24 @@
   <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
   <script src="../src/code.js"></script>
   <script type="text/javascript">
-  $.get('/').then(function(argument) {
-    console.log(a = code(argument))
-    var b = code.createElement(a)
-    console.log(b)
-    document.body.firstElementChild.append(b)
-  })
+  $.get('https://cdn.bootcss.com/highcharts/5.0.14/highcharts.js', function function_name(argument) {
+    // body...
+    debugger
+  }, function function_name(argument) {
+    // body...
+    debugger
+  }).done(function(data) {
+    debugger
+    $('xmp').css('display', 'block').append(code.createElement(code(data)));
+  }) 
+  if (window.XMLHttpRequest){ // code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+  }
+  else { // code for IE6, IE5
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  xmlhttp.open("GET", "https://cdn.bootcss.com/highcharts/5.0.14/highcharts.js", true);
+  xmlhttp.send();
   </script>
 </body>
 

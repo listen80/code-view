@@ -16,7 +16,7 @@
   "name": "code-view",
   "version": "1.0.0",
   "devDependencies": {
-    "clean-css": "4.1.9",
+    "clean-css": "4.1.11",
     "uglify-js": "3.3.3"
   }
 }
