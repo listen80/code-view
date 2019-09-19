@@ -1,4 +1,4 @@
-# codejs
+# code-view
 
 ## 优点
 
