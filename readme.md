@@ -26,7 +26,7 @@
 
 ### xmp,script 标签上加 code 属性
 
-下面这段代码既会*执行*，又会*高亮*
+下面这段代码既会**执行**，又会**高亮**
 
 ```html
 <script type="text/javascript" code>
