@@ -19,7 +19,7 @@
 引入 js 文件
 
 ```html
-<script type="text/javascript" src="code.js"></script>
+<script type="text/javascript" src="https://listen80.github.io/code-view/src/code.js"></script>
 ```
 
 ## 用法
