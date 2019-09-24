@@ -19,6 +19,7 @@
 引入 js 文件
 
 ```html
+<link rel="stylesheet" href="https://listen80.github.io/code-view/src/code.css" />
 <script type="text/javascript" src="https://listen80.github.io/code-view/src/code.js"></script>
 ```
 
