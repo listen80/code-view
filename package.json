@@ -1,23 +1,18 @@
 {
-  "author": {
-    "name": "lijiabin"
-  },
-  "description": "codejs for highlight code",
-  "scripts": {
-    "start": "node gruntfile"
-  },
-  "main": "src/code.js",
-  "maintainers": [
-    {
-      "email": "13631624455@qq.com",
-      "name": "lijiabin"
-    }
-  ],
-  "name": "codejs",
+  "name": "code-view",
   "version": "1.0.0",
+  "description": "code-view for highlight code",
+  "main": "src/code.js",
+  "scripts": {
+    "build": "node build"
+  },
+  "author": "listen80",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/listen80/code-view.git"
+  },
   "devDependencies": {
-    "grunt": "~0.4.0",
-    "grunt-contrib-cssmin": "^2.2.1",
-    "grunt-contrib-uglify": "~0.2.0"
+    "clean-css": "4.1.11",
+    "uglify-js": "3.3.3"
   }
 }
