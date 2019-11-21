@@ -33,5 +33,6 @@
 <script type="text/javascript" code>
   var a = 10;
   var b = function() {};
+  var c = new Date();
 </script>
 ```
