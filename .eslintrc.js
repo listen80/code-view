@@ -18,13 +18,13 @@ module.exports = {
   // add your custom rules here
   rules: {
     // semi: 'off', // 分号
-    // quotes: 'off',
+    quotes: 'off',
     // allow async-await
     // 'generator-star-spacing': 'off',
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? warn : off,
     'comma-dangle': [warn, 'always-multiline'],
-    'no-extra-semi': error,
+    'no-extra-semi': 0,
     // 'one-var': 'off',
     // 'no-constant-condition ': 'off',
     // 'space-before-function-paren': 'off',
