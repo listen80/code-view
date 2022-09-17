@@ -20,7 +20,7 @@
 
 ```html
 <link rel="stylesheet" href="https://listen80.github.io/code-view/src/code.css" />
-<script type="text/javascript" src="https://listen80.github.io/code-view/src/code.js"></script>
+<script type="text/javascript" src="https://listen80.github.io/code-view/dist/code.min.js"></script>
 ```
 
 ## 用法

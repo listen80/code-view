@@ -4,13 +4,13 @@
 <head>
   <meta charset="UTF-8" />
   <title>codejs</title>
-  <link rel="stylesheet" href="../src/code.css" />
+  <link rel="stylesheet" href="../dist/code.css" />
 </head>
 
 <body>
   <xmp code type="text/html"></xmp>
   <script type="text/javascript" src="https://cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
-  <script src="../src/code.js"></script>
+  <script src="../dist/code.min.js"></script>
   <script type="text/javascript">
   let config = {
     jquery: "https://cdn.bootcss.com/jquery/2.0.0/jquery.js",
@@ -36,7 +36,7 @@
       format(response.data)
     })
     .catch(function(error) {
-      format(error.response.data);
+      console.error(error)
     });
   </script>
 </body>
