@@ -7,7 +7,16 @@
   </head>
 
   <body>
-    <xmp code type="text/html"></xmp>
+    <pre>
+      <code>let config = {
+        src: "src/index.js",
+        jquery: "https://cdn.bootcss.com/jquery/2.0.0/jquery.js",
+        vue: "https://cdn.bootcss.com/vue/2.6.10/vue.common.dev.js",
+        react: "https://cdn.bootcss.com/react/16.9.0/cjs/react.development.js",
+        bootstrap:
+          "https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.js",
+      };</code>
+    </pre>
     <script
       type="text/javascript"
       src="https://cdn.bootcss.com/axios/0.19.0/axios.min.js"
@@ -23,7 +32,7 @@
           "https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.js",
       };
 
-      const search = location.search.substr(1) || "src";
+      const search = location.search.substr(1);
 
       function format(data) {
         document
@@ -32,14 +41,14 @@
         document.querySelector("xmp").style.display = "block";
       }
 
-      axios
-        .get(config[search])
-        .then(function (response) {
-          format(response.data);
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
+      if (search) {
+        axios
+          .get(config[search])
+          .then((response) => format(response.data))
+          .catch((error) => console.error(error));
+      } else {
+        code();
+      }
     </script>
   </body>
 </html>
