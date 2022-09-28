@@ -19,7 +19,9 @@ const plugins = [
 if (process.env.NODE_ENV === "development") {
   plugins.push(
     serve({
-      // open: true,
+      open: true,
+      // Remember to start with a slash.
+      openPage: '/examples/',
       port: 9000,
       contentBase: "",
     })
