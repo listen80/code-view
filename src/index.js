@@ -23,6 +23,7 @@ function createElement(codes) {
 const code = () => {
   return [];
 };
+
 code.createElement = createElement;
 
 export default code;

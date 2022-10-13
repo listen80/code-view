@@ -17,10 +17,6 @@
           "https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.js",
       };</code>
     </pre>
-    <script
-      type="text/javascript"
-      src="https://cdn.bootcss.com/axios/0.19.0/axios.min.js"
-    ></script>
     <script src="dist/code.min.js"></script>
     <script type="text/javascript">
       let config = {
@@ -32,9 +28,10 @@
           "https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.js",
       };
 
-      const search = location.search.substr(1);
+      const search = location.search.substr(1) || 'src';
 
       function format(data) {
+        return
         document
           .querySelector("xmp")
           .appendChild(code.createElement(code(data)));
@@ -42,9 +39,9 @@
       }
 
       if (search) {
-        axios
-          .get(config[search])
-          .then((response) => format(response.data))
+        fetch(config[search])
+          .then(data => data.text())
+          .then((response) => format(response))
           .catch((error) => console.error(error));
       } else {
         code();
