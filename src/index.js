@@ -1,4 +1,4 @@
-function createElement(codes) {
+function createElement (codes) {
   const ol = document.createElement("ol");
   let li = document.createElement("li");
   let count = 0;
