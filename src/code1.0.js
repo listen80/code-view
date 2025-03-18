@@ -1057,4 +1057,3 @@ function code (element, indent) {
 code.createElement = createElement
 
 module.exports = code
-console.log(code)

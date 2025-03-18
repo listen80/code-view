@@ -7,6 +7,11 @@
   </head>
 
   <body>
+    <xmp>
+      <script>
+        alert(12)
+      </script>
+    </xmp>
     <pre>
       <code>let config = {
         src: "src/index.js",
@@ -31,7 +36,6 @@
       const search = location.search.substr(1) || 'src';
 
       function format(data) {
-        return
         document
           .querySelector("xmp")
           .appendChild(code.createElement(code(data)));
