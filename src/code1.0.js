@@ -13,7 +13,7 @@ const ryan = "ryan"
 let source = ""
 let token, style, cache, match, i, analysis
 
-function inArray (value, arr) {
+function inArray(value, arr) {
   for (let x = 0, len = arr.length; x < len; x++) {
     if (arr[x] === value) {
       return 1
@@ -21,39 +21,39 @@ function inArray (value, arr) {
   }
 }
 
-function push () {
+function push() {
   analysis.push([cache, style])
 }
 
-function isSpace () {
+function isSpace() {
   return token && /[\v\t ]/.test(token)
 }
 
-function isNewLine () {
+function isNewLine() {
   return token === "\n" || token === "\r"
 }
 
-function isHex () {
+function isHex() {
   return token && /[0-9A-Fa-f]/.test(token)
 }
 
-function isNumber () {
+function isNumber() {
   return token && /[0-9]/.test(token)
 }
 
-function isPunctuation () {
+function isPunctuation() {
   return "~`!@#$%^&*()-_+=[]{}\\;:'\"|,.<>/?".indexOf(token) !== -1
 }
 
-function isLetter () {
+function isLetter() {
   return token && /[a-zA-Z_]/.test(token)
 }
 
-function isHtmlLetter () {
+function isHtmlLetter() {
   return isLetter() || token === "-"
 }
 
-function isLogistic () {
+function isLogistic() {
   return "$!+-=*%&|^<>".indexOf(token) !== -1
 }
 
@@ -62,23 +62,23 @@ const keywords =
     ",",
   )
 
-function isKeyword () {
+function isKeyword() {
   return inArray(cache, keywords)
 }
 
-function isConstant () {
+function isConstant() {
   return inArray(cache, ["null", "true", "false", "undefined"])
 }
 
 const variable = ["var", "let", "const"]
 
-function isVariable () {
+function isVariable() {
   return inArray(cache, variable)
 }
 
 const parameter = ["self", "this", "argument"]
 
-function isParameter () {
+function isParameter() {
   return inArray(cache, parameter)
 }
 
@@ -100,11 +100,11 @@ const normal = [
   "Math",
 ]
 
-function isNormal () {
+function isNormal() {
   return inArray(cache, normal)
 }
 
-function getHex () {
+function getHex() {
   style = purple
   cache = token
   while (true) {
@@ -117,7 +117,7 @@ function getHex () {
   }
 }
 
-function getNumber () {
+function getNumber() {
   cache = token
   while (true) {
     token = source[++i]
@@ -140,7 +140,7 @@ function getNumber () {
   }
 }
 
-function getWord () {
+function getWord() {
   cache = token
   while (true) {
     token = source[++i]
@@ -152,7 +152,7 @@ function getWord () {
   }
 }
 
-function getHtmlWord () {
+function getHtmlWord() {
   cache = token
   while (true) {
     token = source[++i]
@@ -169,7 +169,7 @@ const tagnames =
     ",",
   )
 
-function isTargetName () {
+function isTargetName() {
   return inArray(cache, tagnames)
 }
 
@@ -178,7 +178,7 @@ const cssKeys =
     ",",
   )
 
-function isCssKey () {
+function isCssKey() {
   return inArray(cache.replace(/^-(webkit|moz|ms|o)-/, ""), cssKeys)
 }
 
@@ -187,16 +187,16 @@ const cssValues =
     ",",
   )
 
-function isCssValue () {
+function isCssValue() {
   return inArray(cache.replace(/^-(webkit|moz|ms|o)-/, ""), cssValues)
 }
 
-function handle (style) {
+function handle(style) {
   analysis.push([token, style])
   i++
 }
 
-function handleSpace () {
+function handleSpace() {
   style = space
   cache = token
   while (true) {
@@ -210,7 +210,7 @@ function handleSpace () {
   }
 }
 
-function hanldeNumber () {
+function hanldeNumber() {
   style = purple
   cache = token
   while (true) {
@@ -224,7 +224,7 @@ function hanldeNumber () {
   }
 }
 
-function AnalysisForCSSCode () {
+function analysisForCSSCode() {
   while (true) {
     token = source[i]
     if (!token) {
@@ -466,8 +466,8 @@ function AnalysisForCSSCode () {
   return analysis
 }
 
-function AnalysisForMarkupCode () {
-  function handleWord () {
+function analysisForMarkupCode() {
+  function handleWord() {
     // tag attribute (name) = value
     style = green
     cache = token
@@ -540,16 +540,16 @@ function AnalysisForMarkupCode () {
     }
   }
 
-  function handleInnerTag () {
+  function handleInnerTag() {
     const endIndex = source.indexOf("</" + matchTag + ">", i)
     if (endIndex !== -1 && endIndex > i) {
       const preSource = source
       source = source.substring(i, endIndex)
       i = 0
       if (matchTag === "style") {
-        AnalysisForCSSCode()
+        analysisForCSSCode()
       } else {
-        AnalysisForSourceCode()
+        analysisForSourceCode()
       }
       source = preSource
       i = endIndex
@@ -676,8 +676,8 @@ function AnalysisForMarkupCode () {
   return analysis
 }
 
-function AnalysisForSourceCode () {
-  function isRegExp () {
+function analysisForSourceCode() {
+  function isRegExp() {
     let _i
     if (token === "/") {
       _i = i
@@ -715,7 +715,7 @@ function AnalysisForSourceCode () {
     }
   }
 
-  function handlePunctuation () {
+  function handlePunctuation() {
     if (token === "/" && source[i + 1] === "*") {
       cache = "/*"
       i += 2
@@ -846,7 +846,7 @@ function AnalysisForSourceCode () {
     }
   }
 
-  function handleNumberAndHex () {
+  function handleNumberAndHex() {
     style = purple
     cache = token
     if (token === "0" && (source[i + 1] === "x" || source[i + 1] === "X")) {
@@ -866,7 +866,7 @@ function AnalysisForSourceCode () {
     }
   }
 
-  function handleFunction () {
+  function handleFunction() {
     let len = analysis.length - 1
     if (len > -1) {
       token = analysis[len][0][0]
@@ -975,7 +975,7 @@ function AnalysisForSourceCode () {
   return analysis
 }
 
-function AnalysisFor (s, indent) {
+function analysisForString(s, indent) {
   source = s
   if (indent) {
     const reg = new RegExp("^\\s{" + indent + "}")
@@ -989,16 +989,16 @@ function AnalysisFor (s, indent) {
   i = 0
   analysis = []
   return /^\s*</.test(source)
-    ? AnalysisForMarkupCode()
-    : AnalysisForSourceCode()
+    ? analysisForMarkupCode()
+    : analysisForSourceCode()
 }
 
-function AnalysisForElement (script) {
+function analysisForElement(script) {
   if (!script.coded) {
     script.coded = true
     const firstChild = script.firstChild
     if (firstChild) {
-      const codes = AnalysisFor(
+      const codes = analysisForString(
         firstChild.nodeValue.replace(/^\s+|\s+$/g, ""),
         script.getAttribute("code"),
       )
@@ -1009,7 +1009,7 @@ function AnalysisForElement (script) {
   }
 }
 
-function createElement (codes) {
+function createElement(codes) {
   const ol = document.createElement("ol")
   let li = document.createElement("li")
   let count = 0
@@ -1031,29 +1031,56 @@ function createElement (codes) {
   return ol
 }
 
-function AnalysisForTagName (tagname) {
+function createHtml(codes) {
+  const ol = document.createElement("ol")
+  let li = document.createElement("li")
+  let count = 0
+  for (let x = 0, len = codes.length; x < len; x++) {
+    const code = codes[x]
+    const span = document.createElement("span")
+    span.appendChild(document.createTextNode(code[0]))
+    span.className = code[1]
+    if (span.className === "line") {
+      ol.appendChild(li)
+      li = document.createElement("li")
+      count++
+    } else {
+      li.appendChild(span)
+    }
+  }
+  ol.style.paddingLeft = String(count).length / 2 + 1.3 + "em"
+  ol.appendChild(li)
+  return ol
+}
+
+function analysisForTagName(tagname) {
   const scripts = document.getElementsByTagName(tagname)
   for (let k = 0, len = scripts.length; k < len; k++) {
     const script = scripts[k]
-    script.hasAttribute("code") && AnalysisForElement(script)
+    script.hasAttribute("code") && analysisForElement(script)
   }
 }
 
-function code (element, indent) {
+function code(element, indent) {
   if (!element) {
-    AnalysisForTagName("xmp")
-    AnalysisForTagName("script")
-    AnalysisForTagName("pre")
+    analysisForTagName("xmp")
+    analysisForTagName("script")
+    analysisForTagName("pre")
   } else {
     if (element instanceof Node) {
       element.setAttribute("code", "")
-      AnalysisForElement(element)
+      analysisForElement(element)
     } else {
-      return AnalysisFor(element.toString(), indent)
+      return analysisForString(element.toString(), indent)
     }
   }
 }
 
 code.createElement = createElement
+code.createHtml = createHtml
+
+code.analysisForTagName = analysisForTagName
+code.analysisForElement = analysisForElement
+code.analysisForString = analysisForString
 
 module.exports = code
