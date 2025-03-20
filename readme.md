@@ -8,11 +8,12 @@
 
 ## 例子
 
-[HTML + JS + CSS 混杂](https://listen80.github.io/code-view/examples/demo.html)  
+[demo](https://listen80.github.io/code-view/demo.html)
+<!-- [HTML + JS + CSS 混杂](https://listen80.github.io/code-view/examples/demo.html)  
 [解析 jQuery](https://listen80.github.io/code-view/examples/?jquery)  
 [解析 vue](https://listen80.github.io/code-view/examples/?vue)  
 [解析 react](https://listen80.github.io/code-view/examples/?react)  
-[解析 twitter-bootstrap](https://listen80.github.io/code-view/examples/?twitter-bootstrap)
+[解析 twitter-bootstrap](https://listen80.github.io/code-view/examples/?twitter-bootstrap) -->
 
 ## 安装
 
@@ -22,6 +23,7 @@
 <link rel="stylesheet" href="https://listen80.github.io/code-view/src/code.css" />
 <script type="text/javascript" src="https://listen80.github.io/code-view/dist/code.min.js"></script>
 ```
+
 
 ## 用法
 
