@@ -1,5 +1,5 @@
 // src/index.js
-import { analysisForString, analysisForElement, analysisForTagName } from './utils/analysis.js';
+import { analysisForString, analysisForElement, analysisForTagName } from './analysis.js';
 // import { createElement, createHtml } from './utils/domUtils.js';
 function code(element, indent) {
     if (!element) {

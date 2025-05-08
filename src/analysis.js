@@ -1,8 +1,8 @@
 // src/utils/analysis.js
-import { analysisForMarkupCode } from './markupAnalysis.js';
-import { analysisForSourceCode } from './sourceAnalysis.js';
-import { analysisForString } from './analysisForString.js';
-import { createElement, createHtml } from './domUtils.js';
+import { analysisForMarkupCode } from './parse/markupAnalysis.js';
+import { analysisForSourceCode } from './parse/sourceAnalysis.js';
+import { analysisForString } from './parse/analysisForString.js';
+import { createElement, createHtml } from './utils/domUtils.js';
 
 // export function analysisForString(source, indent) {
 // 	if (indent) {

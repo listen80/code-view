@@ -1,5 +1,5 @@
 // src/utils/sourceAnalysis.js
-import { isSpace, isNewLine, isLetter, isNumber, isPunctuation } from './helpers.js';
+import { isSpace, isNewLine, isLetter, isNumber, isPunctuation } from '../utils/helpers.js';
 const space = "space"
 const line = "line"
 const dark = "dark"
