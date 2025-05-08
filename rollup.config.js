@@ -28,9 +28,8 @@ if (process.env.NODE_ENV === "development") {
     })
   );
 } else {
-  // plugins.push(terser());
+  plugins.push(terser());
 }
-plugins.push(terser());
 
 export default {
   plugins,
