@@ -26,17 +26,18 @@ export function analysisForElement(element) {
 	if (!element.codes) {
 		const firstChild = element.firstChild;
 		if (firstChild) {
-			const codes = analysisForString(firstChild.nodeValue.replace(/^\s+|\s+$/g, ''), element.getAttribute('code'));
-			element.codes = codes;
-			const ol = createElement(codes);
+			const { ast, lan } = analysisForString(firstChild.nodeValue.replace(/^\s+|\s+$/g, ''), element.getAttribute('code'));
+			element.codes = ast;
+			element.setAttribute('code', lan);
+			const ol = createElement(ast);
 			element.replaceChild(ol, firstChild);
 		} else {
-			const codes = analysisForString(element.innerText + '', element.getAttribute('code'));
-			element.codes = codes;
-			const ol = createHtml(codes);
+			const { ast, lan } = analysisForString(element.innerText + '', element.getAttribute('code'));
+			element.codes = ast;
+			element.setAttribute('code', lan);
+			const ol = createHtml(ast);
 			element.innerHTML = ol;
 		}
-		element.setAttribute('code', '');
 		if (getComputedStyle(element).getPropertyValue('display') === 'none') {
 			element.style.display = 'block';
 		}

@@ -22,39 +22,39 @@ function inArray(value, arr) {
   }
 }
 
-function push() {
+function push(cache, style) {
   analysis.push([cache, style])
 }
 
-function isSpace() {
+function isSpace(token) {
   return token && /[\v\t ]/.test(token)
 }
 
-function isNewLine() {
+function isNewLine(token) {
   return token === "\n" || token === "\r"
 }
 
-function isHex() {
+function isHex(token) {
   return token && /[0-9A-Fa-f]/.test(token)
 }
 
-function isNumber() {
+function isNumber(token) {
   return token && /[0-9]/.test(token)
 }
 
-function isPunctuation() {
+function isPunctuation(token) {
   return "~`!@#$%^&*()-_+=[]{}\\;:'\"|,.<>/?".indexOf(token) !== -1
 }
 
-function isLetter() {
+function isLetter(token) {
   return token && /[a-zA-Z_]/.test(token)
 }
 
 function isHtmlLetter() {
-  return isLetter() || token === "-"
+  return isLetter(token) || token === "-"
 }
 
-function isLogistic() {
+function isLogistic(token) {
   return "$!+-=*%&|^<>".indexOf(token) !== -1
 }
 
@@ -110,7 +110,7 @@ function getHex() {
   cache = token
   while (true) {
     token = source[++i]
-    if (isHex()) {
+    if (isHex(token)) {
       cache += token
     } else {
       break
@@ -122,13 +122,13 @@ function getNumber() {
   cache = token
   while (true) {
     token = source[++i]
-    if (isNumber()) {
+    if (isNumber(token)) {
       cache += token
     } else if (token === ".") {
       cache += token
       while (true) {
         token = source[++i]
-        if (isNumber()) {
+        if (isNumber(token)) {
           cache += token
         } else {
           break
@@ -145,7 +145,7 @@ function getWord() {
   cache = token
   while (true) {
     token = source[++i]
-    if (isLetter() || isNumber()) {
+    if (isLetter(token) || isNumber(token)) {
       cache += token
     } else {
       break
@@ -157,7 +157,7 @@ function getHtmlWord() {
   cache = token
   while (true) {
     token = source[++i]
-    if (isHtmlLetter() || isNumber()) {
+    if (isHtmlLetter() || isNumber(token)) {
       cache += token
     } else {
       break
@@ -202,10 +202,10 @@ function handleSpace() {
   cache = token
   while (true) {
     token = source[++i]
-    if (isSpace()) {
+    if (isSpace(token)) {
       cache += token
     } else {
-      push()
+      push(cache, style)
       break
     }
   }
@@ -216,10 +216,10 @@ function hanldeNumber() {
   cache = token
   while (true) {
     token = source[++i]
-    if (isNumber()) {
+    if (isNumber(token)) {
       cache += token
     } else {
-      push()
+      push(cache, style)
       break
     }
   }
@@ -237,16 +237,16 @@ function analysisForCSSCode() {
       while (true) {
         token = source[i]
         if (!token) {
-          cache && push()
+          cache && push(cache, style)
           break
         } else if (token === "*" && source[i + 1] === "/") {
           cache += "*/"
-          push()
+          push(cache, style)
           i += 2
           break
-        } else if (isNewLine()) {
+        } else if (isNewLine(token)) {
           style = dark
-          cache && push()
+          cache && push(cache, style)
           handle(line)
           cache = ""
         } else {
@@ -262,17 +262,17 @@ function analysisForCSSCode() {
         getHtmlWord()
         style = green
         cache = match + cache
-        push()
+        push(cache, style)
       } else {
         style = white
         cache = match
-        push()
+        push(cache, style)
       }
     } else if (token === "[") {
       handle(white)
       while (true) {
         token = source[i]
-        if (!token || isNewLine()) {
+        if (!token || isNewLine(token)) {
           break
         } else if (token === "]") {
           handle(white)
@@ -280,16 +280,16 @@ function analysisForCSSCode() {
         } else if (isHtmlLetter()) {
           getHtmlWord()
           style = green
-          push()
-        } else if (isSpace()) {
+          push(cache, style)
+        } else if (isSpace(token)) {
           handleSpace()
         } else if (token === "=") {
           handle(red)
           while (true) {
             token = source[i]
-            if (!token || isNewLine() || token === "]") {
+            if (!token || isNewLine(token) || token === "]") {
               break
-            } else if (isSpace()) {
+            } else if (isSpace(token)) {
               handleSpace()
             } else if (token === '"' || token === "'") {
               match = cache = token
@@ -297,12 +297,12 @@ function analysisForCSSCode() {
               i++
               while (true) {
                 token = source[i]
-                if (!token || isNewLine()) {
-                  cache && push()
+                if (!token || isNewLine(token)) {
+                  cache && push(cache, style)
                   break
                 } else if (token === match) {
                   cache += token
-                  push()
+                  push(cache, style)
                   i++
                   break
                 } else {
@@ -313,7 +313,7 @@ function analysisForCSSCode() {
             } else if (isHtmlLetter()) {
               getHtmlWord()
               style = yellow
-              push()
+              push(cache, style)
             } else {
               handle(white)
             }
@@ -321,11 +321,11 @@ function analysisForCSSCode() {
         } else {
           cache = token
           style = white
-          push()
+          push(cache, style)
           i++
         }
       }
-    } else if (isNewLine()) {
+    } else if (isNewLine(token)) {
       handle(line)
     } else if (token === ":") {
       handle(white)
@@ -333,15 +333,15 @@ function analysisForCSSCode() {
         token = source[i]
         if (!token) {
           break
-        } else if (isSpace()) {
+        } else if (isSpace(token)) {
           handleSpace()
-        } else if (isNewLine()) {
+        } else if (isNewLine(token)) {
           handle(line)
           break
-        } else if (isNumber() || token === ".") {
+        } else if (isNumber(token) || token === ".") {
           getNumber()
           style = purple
-          push()
+          push(cache, style)
           // hanldeNumber();
           // px em %
           if (token === "%") {
@@ -351,23 +351,23 @@ function analysisForCSSCode() {
           } else if (token === "p" && source[i + 1] === "x") {
             cache = "px"
             style = red
-            push()
+            push(cache, style)
             i += 2
           } else if (token === "e" && source[i + 1] === "m") {
             cache = "em"
             style = red
-            push()
+            push(cache, style)
             i += 2
           } else if (token === "c" && source[i + 1] === "m") {
             cache = "cm"
             style = red
-            push()
+            push(cache, style)
             i += 2
           }
         } else if (isHtmlLetter()) {
           if (token === "-") {
             token = source[i + 1]
-            if (isNumber() || token === ".") {
+            if (isNumber(token) || token === ".") {
               token = "-"
               handle(purple)
               continue
@@ -378,13 +378,13 @@ function analysisForCSSCode() {
           getHtmlWord()
           if (isCssValue()) {
             style = ryan
-            push()
+            push(cache, style)
           } else if (cache === "important") {
             style = red
-            push()
+            push(cache, style)
           } else {
             style = white
-            push()
+            push(cache, style)
           }
         } else if (token === ";") {
           handle(white)
@@ -393,28 +393,28 @@ function analysisForCSSCode() {
           cache = match = token
           i++
           token = source[i]
-          if (isHex()) {
+          if (isHex(token)) {
             getHex()
             cache = match + cache
             style = purple
-            push()
+            push(cache, style)
           } else {
             style = white
-            push()
+            push(cache, style)
             i++
           }
         } else if (token === "#") {
           cache = match = token
           i++
           token = source[i]
-          if (isHex()) {
+          if (isHex(token)) {
             getHex()
             cache = match + cache
             style = purple
-            push()
+            push(cache, style)
           } else {
             style = white
-            push()
+            push(cache, style)
             i++
           }
         } else if (token === "!") {
@@ -424,19 +424,19 @@ function analysisForCSSCode() {
           handle(white)
         }
       }
-    } else if (isSpace()) {
+    } else if (isSpace(token)) {
       handleSpace()
     } else if (isHtmlLetter()) {
       getHtmlWord()
       if (isTargetName()) {
         style = red
-        push()
+        push(cache, style)
       } else if (isCssKey()) {
         style = ryan + italic
-        push()
+        push(cache, style)
       } else {
         style = white
-        push()
+        push(cache, style)
       }
     } else if (token === "*") {
       handle(red)
@@ -448,11 +448,11 @@ function analysisForCSSCode() {
       i++
       while (true) {
         token = source[i]
-        if (!token || isNewLine()) {
-          cache && push()
+        if (!token || isNewLine(token)) {
+          cache && push(cache, style)
           break
         } else if (token === "{") {
-          push()
+          push(cache, style)
           break
         } else {
           cache += token
@@ -473,19 +473,19 @@ function analysisForMarkupCode() {
     style = green
     cache = token
     while ((token = source[++i])) {
-      if (isHtmlLetter() || isNumber()) {
+      if (isHtmlLetter() || isNumber(token)) {
         cache += token
       } else {
-        push()
+        push(cache, style)
         break
       }
     }
 
     while (true) {
       token = source[i]
-      if (isNewLine()) {
+      if (isNewLine(token)) {
         handle(line)
-      } else if (isSpace()) {
+      } else if (isSpace(token)) {
         handleSpace()
       } else {
         break
@@ -497,9 +497,9 @@ function analysisForMarkupCode() {
       // tag attribute name (=) value
       style = white
       i++
-      push()
+      push(cache, style)
 
-      if (isSpace()) {
+      if (isSpace(token)) {
         handleSpace()
       }
       token = source[i]
@@ -510,27 +510,27 @@ function analysisForMarkupCode() {
         while ((token = source[++i])) {
           if (token === match) {
             cache += token
-            push()
+            push(cache, style)
             i++
             break
-          } else if (isNewLine()) {
-            push()
+          } else if (isNewLine(token)) {
+            push(cache, style)
             style = line
             cache = token
             i++
-            push()
+            push(cache, style)
           } else {
             cache += token
           }
         }
       } else {
-        if (!(!token || isNewLine() || token === ">")) {
+        if (!(!token || isNewLine(token) || token === ">")) {
           style = yellow
           cache = token
           while (true) {
             token = source[++i]
-            if (!token || isNewLine() || token === ">" || token === " ") {
-              push()
+            if (!token || isNewLine(token) || token === ">" || token === " ") {
+              push(cache, style)
               break
             } else {
               cache += token
@@ -572,18 +572,18 @@ function analysisForMarkupCode() {
           while (true) {
             token = source[i]
             if (!token) {
-              cache && push()
+              cache && push(cache, style)
             } else if (
               token === "-" &&
               source[i + 1] === "-" &&
               source[i + 2] === ">"
             ) {
               cache += "-->"
-              push()
+              push(cache, style)
               i += 3
               break
-            } else if (isNewLine()) {
-              cache && push()
+            } else if (isNewLine(token)) {
+              cache && push(cache, style)
               handle(line)
               cache = ""
             } else {
@@ -617,7 +617,7 @@ function analysisForMarkupCode() {
           matchTag = cache
         }
         style = red
-        push()
+        push(cache, style)
         while ((token = source[i])) {
           if (token === ">") {
             // tag end
@@ -626,7 +626,7 @@ function analysisForMarkupCode() {
               handleInnerTag()
             }
             break
-          } else if (isSpace()) {
+          } else if (isSpace(token)) {
             handleSpace()
           } else if (token === '"' || token === "'") {
             // attribute value
@@ -636,28 +636,28 @@ function analysisForMarkupCode() {
               if (token === match) {
                 cache += token
                 i++
-                push()
+                push(cache, style)
                 break
               } else {
                 cache += token
               }
             }
-          } else if (isHtmlLetter() || isNumber()) {
+          } else if (isHtmlLetter() || isNumber(token)) {
             // tag inner word
             handleWord()
-          } else if (isPunctuation()) {
+          } else if (isPunctuation(token)) {
             // for
             handle(white)
-          } else if (isNewLine()) {
+          } else if (isNewLine(token)) {
             handle(line)
           } else {
             handle("fail")
           }
         }
       }
-    } else if (isNewLine()) {
+    } else if (isNewLine(token)) {
       handle(line)
-    } else if (isSpace()) {
+    } else if (isSpace(token)) {
       handleSpace()
     } else {
       // inner html
@@ -665,8 +665,8 @@ function analysisForMarkupCode() {
       cache = token
       while (true) {
         token = source[++i]
-        if (!token || isNewLine() || token === "<") {
-          push()
+        if (!token || isNewLine(token) || token === "<") {
+          push(cache, style)
           break
         } else {
           cache += token
@@ -684,7 +684,7 @@ function analysisForSourceCode() {
       _i = i
       while (true) {
         token = source[--_i]
-        if (isSpace()) {
+        if (isSpace(token)) {
           continue
         } else if (
           token === "=" ||
@@ -692,12 +692,12 @@ function analysisForSourceCode() {
           token === "(" ||
           token === "|" ||
           token === "?" ||
-          isNewLine() ||
+          isNewLine(token) ||
           !token
         ) {
           _i = i
           while ((token = source[++_i])) {
-            if (isNewLine() || !token) {
+            if (isNewLine(token) || !token) {
               break
             } else if (token === "\\") {
               _i++
@@ -724,16 +724,16 @@ function analysisForSourceCode() {
       while (true) {
         token = source[i]
         if (!token) {
-          cache && push()
+          cache && push(cache, style)
           break
         } else if (token === "*" && source[i + 1] === "/") {
           cache += "*/"
-          push()
+          push(cache, style)
           i += 2
           break
-        } else if (isNewLine()) {
+        } else if (isNewLine(token)) {
           style = dark
-          cache && push()
+          cache && push(cache, style)
           handle(line)
           cache = ""
         } else {
@@ -748,13 +748,13 @@ function analysisForSourceCode() {
       while (true) {
         token = source[++i]
         if (!token) {
-          push()
+          push(cache, style)
           break
-        } else if (isNewLine()) {
-          push()
+        } else if (isNewLine(token)) {
+          push(cache, style)
           cache = token
           style = line
-          push()
+          push(cache, style)
           break
         } else {
           cache += token
@@ -765,46 +765,46 @@ function analysisForSourceCode() {
       match = cache = token
       while (true) {
         token = source[++i]
-        if (!token || isNewLine()) {
-          cache && push()
+        if (!token || isNewLine(token)) {
+          cache && push(cache, style)
           break
         } else if (token === "\\") {
           style = yellow
-          push()
+          push(cache, style)
           cache = token + source[++i]
           style = purple
-          push()
+          push(cache, style)
           cache = ""
         } else if (token === match) {
           cache += token
           style = yellow
-          push()
+          push(cache, style)
           break
         } else {
           cache += token
         }
       }
       i++
-    } else if (token === "/" || isLogistic()) {
+    } else if (token === "/" || isLogistic(token)) {
       match = isRegExp()
       if (match === 1) {
         cache = "/"
         style = "yellow hehe"
-        push()
+        push(cache, style)
         i++
         while (true) {
           token = source[i]
-          if (!token || isNewLine()) {
-            cache && push()
+          if (!token || isNewLine(token)) {
+            cache && push(cache, style)
           } else if (token === "\\") {
             style = purple
             cache = token + source[++i]
-            push()
+            push(cache, style)
             i++
           } else if (token === "/") {
             style = yellow
             cache = token
-            push()
+            push(cache, style)
             i++
             cache = ""
             while ((token = source[i])) {
@@ -816,14 +816,14 @@ function analysisForSourceCode() {
                 break
               }
             }
-            cache && push()
+            cache && push(cache, style)
             break
-          } else if (isLogistic()) {
+          } else if (isLogistic(token)) {
             handle(red)
-          } else if (isLetter()) {
+          } else if (isLetter(token)) {
             style = yellow
             getWord()
-            push()
+            push(cache, style)
             cache = ""
           } else {
             handle(yellow)
@@ -834,10 +834,10 @@ function analysisForSourceCode() {
         style = red
         cache = source[i]
         while ((token = source[++i])) {
-          if (isLogistic()) {
+          if (isLogistic(token)) {
             cache += token
           } else {
-            push()
+            push(cache, style)
             break
           }
         }
@@ -855,10 +855,10 @@ function analysisForSourceCode() {
       cache += source[++i]
       while (true) {
         token = source[++i]
-        if (isHex()) {
+        if (isHex(token)) {
           cache += token
         } else {
-          push()
+          push(cache, style)
           break
         }
       }
@@ -871,18 +871,18 @@ function analysisForSourceCode() {
     let len = analysis.length - 1
     if (len > -1) {
       token = analysis[len][0][0]
-      if (isSpace()) {
+      if (isSpace(token)) {
         len--
         token = analysis[len][0][0]
       }
       if (token === ":" || token === "=") {
         len--
         token = analysis[len][0][0]
-        if (isSpace()) {
+        if (isSpace(token)) {
           len--
           token = analysis[len][0][0]
         }
-        if (isLetter()) {
+        if (isLetter(token)) {
           analysis[len][1] = "green"
         }
       }
@@ -890,31 +890,31 @@ function analysisForSourceCode() {
     token = source[i]
     cache = "function"
     style = ryan + italic
-    push()
+    push(cache, style)
   }
 
   while (true) {
     token = source[i]
     if (!token) {
       break
-    } else if (isSpace()) {
+    } else if (isSpace(token)) {
       handleSpace()
-    } else if (isNewLine()) {
+    } else if (isNewLine(token)) {
       handle(line)
-    } else if (isNumber()) {
+    } else if (isNumber(token)) {
       handleNumberAndHex()
-    } else if (isLetter()) {
+    } else if (isLetter(token)) {
       getWord()
       if (cache === "function") {
         handleFunction()
-        if (isSpace()) {
+        if (isSpace(token)) {
           handleSpace()
         }
-        if (isLetter()) {
+        if (isLetter(token)) {
           getWord()
           style = green
-          push()
-          if (isSpace()) {
+          push(cache, style)
+          if (isSpace(token)) {
             handleSpace()
           }
         }
@@ -922,14 +922,14 @@ function analysisForSourceCode() {
           handle(white)
           while (true) {
             token = source[i]
-            if (isSpace()) {
+            if (isSpace(token)) {
               handleSpace()
             } else if (token === ",") {
               handle(white)
-            } else if (isLetter()) {
+            } else if (isLetter(token)) {
               getWord()
               style = gold + italic
-              push()
+              push(cache, style)
             } else {
               break
             }
@@ -951,10 +951,10 @@ function analysisForSourceCode() {
 
           if (token === "(") {
             style = ryan
-          } else if (isSpace()) {
+          } else if (isSpace(token)) {
             while (true) {
               token = source[i + 1]
-              if (isSpace()) {
+              if (isSpace(token)) {
                 handleSpace()
               } else if (token === "(") {
                 style = ryan
@@ -965,9 +965,9 @@ function analysisForSourceCode() {
             }
           }
         }
-        push()
+        push(cache, style)
       }
-    } else if (isPunctuation()) {
+    } else if (isPunctuation(token)) {
       handlePunctuation()
     } else {
       handle("fail")
@@ -989,7 +989,10 @@ export function analysisForString(s, indent) {
   }
   i = 0
   analysis = []
-  return /^\s*</.test(source)
-    ? analysisForMarkupCode()
-    : analysisForSourceCode()
+  const lan = /^\s*</.test(source) ? "html" : "js"
+  const ast = lan === 'html' ? analysisForMarkupCode() : analysisForSourceCode()
+  return {
+    ast,
+    lan
+  }
 }
