@@ -1,7 +1,7 @@
 import commonjs from "@rollup/plugin-commonjs"; // 使用commonjs
 import resolve from "@rollup/plugin-node-resolve"; // 加载第三方库
 // import babel from "@rollup/plugin-babel"; // 转成es5
-
+import scss from 'rollup-plugin-scss';
 import { terser } from "rollup-plugin-terser"; // 压缩代码
 import serve from "rollup-plugin-serve"; // 启动服务
 
@@ -15,6 +15,10 @@ const plugins = [
   replace({
     "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
   }),
+  scss({
+    output: 'bundle.css',
+    include: ['**/*.scss', '**/*.sass', '**/*.css']
+  })
 ];
 
 if (process.env.NODE_ENV === "development") {
@@ -32,7 +36,6 @@ if (process.env.NODE_ENV === "development") {
 }
 
 export default {
-  plugins,
   input: "src/index.js",
   output: {
     name: "code",
@@ -40,4 +43,5 @@ export default {
     format: "umd",
     intro: "// const DEVELOPMENT = ",
   },
+  plugins,
 };

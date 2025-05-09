@@ -59,7 +59,7 @@ function isLogistic(token) {
 }
 
 const keywords =
-  "break,case,catch,const,continue,debugger,default,delete,do,else,extends,finally,for,if,import,in,instanceof,let,new,return,super,switch,throw,try,typeof,var,void,while,with".split(
+  "class,break,case,catch,const,continue,debugger,default,delete,do,else,extends,finally,for,if,import,in,instanceof,let,new,return,super,switch,throw,try,typeof,var,void,while,with".split(
     ",",
   )
 
