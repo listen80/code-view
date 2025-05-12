@@ -9,7 +9,7 @@
 ## 例子
 
 [auto](https://listen80.github.io/code-view/examples/auto.html)
-[element](https://listen80.github.io/code-view/examples/auto.html)
+[element](https://listen80.github.io/code-view/examples/element.html)
 [string](https://listen80.github.io/code-view/examples/string.html)
 
 ## 安装
@@ -21,6 +21,13 @@
 <script type="text/javascript" src="https://listen80.github.io/code-view/dist/code.min.js"></script>
 ```
 
+nodejs
+```js
+// 需要构建工具支持
+const code = require('codejs')
+require('./code.css')
+
+```
 
 ## 用法
 
