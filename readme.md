@@ -38,3 +38,14 @@
   var c = new Date();
 </script>
 ```
+```js
+
+```
+```js
+const source = `
+const a = 100;
+
+`
+const hightlight = code(source)
+console.log(hight)
+```
