@@ -8,7 +8,7 @@
 
 ## 例子
 
-[demo](https://listen80.github.io/code-view/demo.html)
+[auto](https://listen80.github.io/code-view/auto.html)
 
 
 ## 安装
@@ -40,7 +40,6 @@
 ```js
 const source = `
 const a = 100;
-
 `
 const hightlight = code(source)
 console.log(hight)
