@@ -1,6 +1,6 @@
 import commonjs from "@rollup/plugin-commonjs"; // 使用commonjs
 import resolve from "@rollup/plugin-node-resolve"; // 加载第三方库
-// import babel from "@rollup/plugin-babel"; // 转成es5
+
 import scss from 'rollup-plugin-scss';
 import { terser } from "rollup-plugin-terser"; // 压缩代码
 import serve from "rollup-plugin-serve"; // 启动服务
@@ -24,11 +24,10 @@ const plugins = [
 if (process.env.NODE_ENV === "development") {
   plugins.push(
     serve({
-      open: true,
-      // Remember to start with a slash.
-      // openPage: '/examples/',
-      port: 9000,
-      contentBase: "",
+      // open: true,
+      port: process.env.PORT || 9001,
+      contentBase: ".",
+      historyApiFallback: '/README.md',
     })
   );
 } else {
