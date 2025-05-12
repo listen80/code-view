@@ -8,7 +8,7 @@
 
 ## 例子
 
-[auto](https://listen80.github.io/code-view/auto.html)
+[auto](https://listen80.github.io/code-view/examples/auto.html)
 
 
 ## 安装
