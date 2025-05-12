@@ -9,7 +9,8 @@
 ## 例子
 
 [auto](https://listen80.github.io/code-view/examples/auto.html)
-
+[element](https://listen80.github.io/code-view/examples/auto.html)
+[string](https://listen80.github.io/code-view/examples/string.html)
 
 ## 安装
 
