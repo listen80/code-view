@@ -49,6 +49,6 @@ require('./code.css')
 const source = `
 const a = 100;
 `
-const hightlight = code(source)
-console.log(hight)
+const highlight = code(source)
+console.log(highlight)
 ```
