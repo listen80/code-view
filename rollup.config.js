@@ -16,8 +16,9 @@ const plugins = [
     "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
   }),
   scss({
-    output: 'bundle.css',
-    include: ['**/*.scss', '**/*.sass', '**/*.css']
+    fileName: 'code.css',
+    sourceMap: true,
+    outputStyle: 'compressed'
   })
 ];
 
