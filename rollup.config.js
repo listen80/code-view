@@ -18,7 +18,8 @@ const plugins = [
   scss({
     fileName: 'code.css',
     sourceMap: true,
-    outputStyle: 'compressed'
+    outputStyle: 'compressed',
+    silenceDeprecations: ['legacy-js-api'],
   })
 ];
 
