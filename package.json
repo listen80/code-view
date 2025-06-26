@@ -2,7 +2,7 @@
   "name": "code-view",
   "version": "1.0.0",
   "description": "code-view for highlight code",
-  "main": "dist/lt.js",
+  "main": "dist/code.js",
   "scripts": {
     "build": "rollup -c --environment NODE_ENV:production",
     "start": "rollup -c --environment NODE_ENV:development -w --sourcemap",
@@ -33,5 +33,7 @@
     "rollup-plugin-serve": "^1.1.0",
     "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.7.2"
-  }
+  },
+  "keywords": ["code", "highlight"],
+  "license": "MIT"
 }
