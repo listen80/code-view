@@ -8,7 +8,18 @@
   padding: 8px;
   border-radius: 8px;
   overflow-x: auto;
-  display: none;
+  /* display: none; */
+}
+code[code] {
+  display: inline-block;
+}
+
+xmp[code], pre[code] {
+  display: block;
+}
+
+[code].active {
+  margin: 10px;
 }
 
 [code] ol {
@@ -16,6 +27,7 @@
   margin: 0;
   padding: 0 0 0 40px;
 }
+
 [code] li {
   white-space: pre-wrap;
 }

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>java</title>
+
+</head>
+
+<body>
+    <code lang="java">
+import java.util.Scanner;
+
+/**
+ * 这是一个演示用户交互并输出问候语的类
+ */
+public class HelloWorld {
+    /**
+     * 程序的入口点
+     * @param args 命令行参数
+     */
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("请输入您的名字:");
+        String name = scanner.nextLine();
+        System.out.println("Hello, " + name + "! 欢迎来到Java的世界。");
+        scanner.close();
+    } 
+}
+    </code>
+    <code lang="python">
+def greet_user():
+    """
+    这个函数用于获取用户输入并输出个性化问候语
+    """
+    try:
+        name = input("请输入您的名字: ")
+        if name.strip():
+            print(f"Hello, {name}! 欢迎使用Python编程。")
+        else:
+            print("您没有输入名字，默认问候: Hello, World!")
+    except KeyboardInterrupt:
+        print("\n程序被用户中断。")
+    except Exception as e:
+        print(f"发生错误: {e}")
+
+if __name__ == "__main__":
+    greet_user()
+    </code>
+    <code lang="javascript">
+// 演示用户交互和异步操作
+function getUserName() {
+    return new Promise((resolve) => {
+        const name = prompt("请输入您的名字:");
+        resolve(name);
+    });
+}
+
+async function greetUser() {
+    try {
+        const name = await getUserName();
+        if (name) {
+            console.log(`Hello, ${name}! 欢迎来到JavaScript的世界。`);
+        } else {
+            console.log("Hello, World!");
+        }
+    } catch (error) {
+        console.error("发生错误:", error);
+    }
+}
+
+greetUser();
+    </code>
+    <xmp lang="c">
+#include <stdio.h>;
+#include <stdlib.h>;
+#include <string.h>;
+
+#define MAX_NAME_LENGTH 100
+
+/**
+ * 主函数，演示用户输入和字符串操作
+ */
+int main() {
+    char name[MAX_NAME_LENGTH];
+    printf("请输入您的名字: ");
+    
+    if (fgets(name, sizeof(name), stdin) != NULL) {
+        // 去除换行符
+        name[strcspn(name, "\n")] = 0;
+        
+        if (strlen(name) > 0) {
+            printf("Hello, %s! 欢迎使用C语言编程。\n", name);
+        } else {
+            printf("Hello, World!\n");
+        }
+    } else {
+        fprintf(stderr, "读取输入时出错。\n");
+        return EXIT_FAILURE;
+    }
+    
+    return 0;
+}
+    </xmp>
+    <xmp lang="c++">
+#include <iostream>;
+#include <string>;
+
+using namespace std;
+
+/**
+ * 主函数，演示C++的用户交互
+ */
+int main() {
+    try {
+        string name;
+        cout << "请输入您的名字: ";
+        getline(cin, name);
+        
+        if (!name.empty()) {
+            cout << "Hello, " << name << "! 欢迎来到C++的世界。" << endl;
+        } else {
+            cout << "Hello, World!" << endl;
+        }
+    } catch (const exception& e) {
+        cerr << "发生错误: " << e.what() << endl;
+        return 1;
+    }
+    
+    return 0;
+}
+    </xmp>
+    <xmp lang="c#">
+using System;
+
+namespace HelloWorldApp
+{
+    class Program
+    {
+        /// <summary>
+        /// 程序的入口点
+        /// </summary>
+        static void Main()
+        {
+            try
+            {
+                Console.WriteLine("请输入您的名字:");
+                string name = Console.ReadLine();
+                if (!string.IsNullOrEmpty(name))
+                {
+                    Console.WriteLine($"Hello, {name}! 欢迎使用C#编程。");
+                }
+                else
+                {
+                    Console.WriteLine("Hello, World!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"发生错误: {ex.Message}");
+            }
+        }
+    }
+}
+    </xmp>
+    <code lang="ruby">
+# 演示用户输入和错误处理
+def greet_user
+  begin
+    print "请输入您的名字: "
+    name = gets.chomp
+    if name.empty?
+      puts "Hello, World!"
+    else
+      puts "Hello, #{name}! 欢迎使用Ruby编程。"
+    end
+  rescue StandardError => e
+    puts "发生错误: #{e.message}"
+  end
+end
+
+greet_user
+    </code>
+    <code lang="go">
+package main
+
+import (
+    "bufio"
+    "fmt"
+    "os"
+    "strings"
+)
+
+// 主函数，演示Go语言的用户交互
+func main() {
+    reader := bufio.NewReader(os.Stdin)
+    fmt.Print("请输入您的名字: ")
+    name, err := reader.ReadString('\n')
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "读取输入时出错: %v\n", err)
+        return
+    }
+    name = strings.TrimSpace(name)
+    
+    if name != "" {
+        fmt.Printf("Hello, %s! 欢迎使用Go语言编程。\n", name)
+    } else {
+        fmt.Println("Hello, World!")
+    }
+}
+    </code>
+    <code lang="swift">
+import Foundation
+
+// 演示用户交互和错误处理
+print("请输入您的名字: ", terminator: "")
+if let name = readLine() {
+    if !name.isEmpty {
+        print("Hello, \(name)! 欢迎来到Swift的世界。")
+    } else {
+        print("Hello, World!")
+    }
+} else {
+    print("读取输入时出错。")
+}
+    </code>
+    <code lang="kotlin">
+import java.util.Scanner
+
+fun main() {
+    try {
+        val scanner = Scanner(System.`in`)
+        println("请输入您的名字:")
+        val name = scanner.nextLine()
+        if (name.isNotBlank()) {
+            println("Hello, $name! 欢迎使用Kotlin编程。")
+        } else {
+            println("Hello, World!")
+        }
+        scanner.close()
+    } catch (e: Exception) {
+        println("发生错误: ${e.message}")
+    }
+}
+    </code>
+    <code lang="scala">
+import scala.io.StdIn
+
+object HelloWorld extends App {
+  try {
+    print("请输入您的名字: ")
+    val name = StdIn.readLine()
+    if (name.nonEmpty) {
+      println(s"Hello, $name! 欢迎来到Scala的世界。")
+    } else {
+      println("Hello, World!")
+    }
+  } catch {
+    case e: Exception => println(s"发生错误: ${e.getMessage}")
+  }
+}
+    </code>
+    <code lang="rust">
+use std::io;
+
+fn main() {
+    println!("请输入您的名字:");
+    let mut name = String::new();
+    
+    match io::stdin().read_line(&mut name) {
+        Ok(_) => {
+            let name = name.trim();
+            if !name.is_empty() {
+                println!("Hello, {}! 欢迎使用Rust编程。", name);
+            } else {
+                println!("Hello, World!");
+            }
+        }
+        Err(e) => {
+            eprintln!("读取输入时出错: {}", e);
+        }
+    }
+}
+    </code>
+    <code lang="php">
+<?php
+// 演示用户输入和错误处理
+if (php_sapi_name() === 'cli') {
+    echo "请输入您的名字: ";
+    $name = trim(fgets(STDIN));
+    if (!empty($name)) {
+        echo "Hello, $name! 欢迎使用PHP编程。\n";
+    } else {
+        echo "Hello, World!\n";
+    }
+} else {
+    echo "此脚本需要在命令行环境下运行。";
+}
+?>;
+    </code>
+    <code lang="perl">
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+print "请输入您的名字: ";
+chomp(my $name = <STDIN>);
+
+if ($name) {
+    print "Hello, $name! 欢迎使用Perl编程。\n";
+} else {
+    print "Hello, World!\n";
+}
+    </code>
+    <code lang="r">
+# 演示用户交互和错误处理
+tryCatch({
+  name <- readline(prompt = "请输入您的名字: ")
+  if (nchar(name) > 0) {
+    cat(paste0("Hello, ", name, "! 欢迎使用R语言编程。\n"))
+  } else {
+    cat("Hello, World!\n")
+  }
+}, error = function(e) {
+  cat(paste0("发生错误: ", conditionMessage(e), "\n"))
+})
+    </code>
+    <code lang="dart">
+import 'dart:io';
+
+void main() {
+  print('请输入您的名字:');
+  stdin.readLineSync().then((name) {
+    if (name != null && name.trim().isNotEmpty) {
+      print('Hello, ${name.trim()}! 欢迎使用Dart编程。');
+    } else {
+      print('Hello, World!');
+    }
+  }).catchError((error) {
+    print('读取输入时出错: $error');
+  });
+}
+    </code>
+    <code lang="lua">
+-- 演示用户输入和错误处理
+io.write("请输入您的名字: ")
+local name = io.read()
+if name and name:match("%S") then
+    print("Hello, " .. name .. "! 欢迎使用Lua编程。")
+else
+    print("Hello, World!")
+end
+    </code>
+    <code lang="haskell">
+import System.IO
+
+main :: IO ()
+main = do
+    putStr "请输入您的名字: "
+    hFlush stdout
+    name <- getLine
+    if null name
+        then putStrLn "Hello, World!"
+        else putStrLn $ "Hello, " ++ name ++ "! 欢迎使用Haskell编程。"
+    </code>
+    <code lang="erlang">
+#!/usr/bin/env escript
+%%! -sname hello
+main(_) ->
+    io:format("请输入您的名字: "),
+    case io:get_line("") of
+        eof ->
+            io:format("读取输入时出错。~n");
+        Line ->
+            Name = string:trim(Line, trailing, "\n"),
+            if
+                Name /= "" ->
+                    io:format("Hello, ~s! 欢迎使用Erlang编程。~n", [Name]);
+                true ->
+                    io:format("Hello, World!~n")
+            end
+    end.
+    </code>
+    <code lang="elixir">
+IO.puts("请输入您的名字:")
+case IO.gets("") do
+  :eof ->
+    IO.puts("读取输入时出错。")
+  name ->
+    name = String.trim(name)
+    if name != "" do
+      IO.puts("Hello, #{name}! 欢迎使用Elixir编程。")
+    else
+      IO.puts("Hello, World!")
+    end
+end
+    </code>
+    <code lang="julia">
+try
+    print("请输入您的名字: ")
+    name = readline()
+    if !isempty(strip(name))
+        println("Hello, $(strip(name))! 欢迎使用Julia编程。")
+    else
+        println("Hello, World!")
+    end
+catch e
+    println("发生错误: $e")
+end
+    </code>
+  <link rel="stylesheet" href="../dist/code.css">
+  <script src="../dist/code.min.js" auto></script>
+
+</body>
+
+</html>

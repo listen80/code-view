@@ -6,7 +6,7 @@ function code(element, indent) {
   if (!element) {
     return [
       ...analysisForTagName('code'),
-      ...analysisForTagName('pre'),
+      // ...analysisForTagName('pre'),
       ...analysisForTagName('script'),
       ...analysisForTagName('xmp')
     ];
@@ -25,8 +25,8 @@ function code(element, indent) {
   }
 }
 
-if (document.currentScript.hasAttribute('code')) {
-  console.log(code())
+if (document.currentScript.hasAttribute('auto')) {
+  setTimeout(code)
 }
 
 export default code;
