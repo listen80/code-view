@@ -32,9 +32,8 @@ if (process.env.NODE_ENV === "development") {
       historyApiFallback: '/README.md',
     })
   );
-} else {
-  plugins.push(terser());
 }
+plugins.push(terser());
 
 export default {
   input: "src/index.js",
