@@ -11,6 +11,7 @@
 [auto](https://listen80.github.io/code-view/examples/auto.html)
 [element](https://listen80.github.io/code-view/examples/element.html)
 [string](https://listen80.github.io/code-view/examples/string.html)
+[lang](https://listen80.github.io/code-view/examples/lang.html)
 
 ## 安装
 
