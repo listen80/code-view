@@ -2,7 +2,7 @@
 
 ## 优点
 
-1. 专精 极高的还原 sublime 主题
+1. 专精 极高的还原 sublime monakai 主题
 2. 极速 超过绝大数引擎
 3. 小巧 min 后 js 16KB, css 1KB
 
